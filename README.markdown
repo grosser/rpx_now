@@ -10,9 +10,14 @@ Solution
 
 Usage
 =====
-  - Get an API key @ [RPX](http://rpxnow.com)
-  - Build login view
-  - Communicate with RPX API in controller to create or login User
+ - Get an API key @ [RPX](http://rpxnow.com)
+ - Build login view
+ - Communicate with RPX API in controller to create or login User
+
+Install
+=======
+ - As Rails plugin: `script/plugin install git://github.com/grosser/rpx_now.git `
+ - As gem: `sudo gem install grosser-rpx_now --source http://gems.github.com/`
 
 Examples
 ========
