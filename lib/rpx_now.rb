@@ -3,7 +3,6 @@ module RPXNow
   extend self
   def user_data(token,api_key)
     raise "NO API KEY" if api_key.blank?
-    return if token.blank?
     data = post('https://rpxnow.com/api/v2/auth_info',{:token=>token,:apiKey=>api_key})
     data = ActiveSupport::JSON.decode(data)
     return if data['err']

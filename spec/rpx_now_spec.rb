@@ -1,0 +1,37 @@
+require File.expand_path("spec_helper", File.dirname(__FILE__))
+
+API_KEY = '4b339169026742245b754fa338b9b0aebbd0a733'
+
+describe RPXNow do
+  describe :embed_code do
+    it "contains the subdomain" do
+      RPXNow.embed_code('xxx','my_url').should =~ /xxx/
+    end
+    it "contains the url" do
+      RPXNow.embed_code('xxx','my_url').should =~ /token_url=my_url/
+    end
+  end
+  describe :user_data do
+    it "is empty when used with an invalid token" do
+      silence_warnings do
+        RPXNow.user_data('xxxx',API_KEY).should == nil
+      end
+    end
+    it "raises when api-key is missing" do
+      lambda{RPXNow.user_data('xxx','').should raise_error('NO API KEY')}
+    end
+    it "parses JSON response to user data" do
+      fake_response = '{"profile":{"verifiedEmail":"grosser.michael@googlemail.com","displayName":"Michael Grosser","preferredUsername":"grosser.michael","identifier":"https:\/\/www.google.com\/accounts\/o8\/id?id=AItOawmaOlyYezg_WfbgP_qjaUyHjmqZD9qNIVM","email":"grosser.michael@gmail.com"},"stat":"ok"}'
+      RPXNow.expects(:post).returns fake_response
+      RPXNow.user_data('','x').should == {:name=>'Michael Grosser',:email=>'grosser.michael@googlemail.com',:identifier=>"https://www.google.com/accounts/o8/id?id=AItOawmaOlyYezg_WfbgP_qjaUyHjmqZD9qNIVM"}
+    end
+  end
+  describe :read_user_data_from_response do
+    it "reads secondary names" do
+      RPXNow.send(:read_user_data_from_response,{'profile'=>{'preferredUsername'=>'1'}})[:name].should == '1'
+    end
+    it "parses email when no name is found" do
+      RPXNow.send(:read_user_data_from_response,{'profile'=>{'email'=>'1@xxx.com'}})[:name].should == '1'
+    end
+  end
+end
