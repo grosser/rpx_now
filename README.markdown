@@ -13,6 +13,7 @@ Usage
  - Get an API key @ [RPX](http://rpxnow.com)
  - Build login view
  - Communicate with RPX API in controller to create or login User
+ - for more advanced features have a look at the [RPX API Docs](https://rpxnow.com/docs)
 
 Install
 =======
@@ -26,11 +27,14 @@ Examples
 View
 ----
     #login.erb
-    #here 'mywebsite' is your subdomain on RPX
+    #here 'mywebsite' is your subdomain/realm on RPX
     <%=RPXNow.embed_code('mywebsite',rpx_token_sessions_url)%>
+    OR
+    <%=RPXNow.popup_code('Login here...','mywebsite',rpx_token_sessions_url,:language=>'de')%>
 
 Controller
 ----------
+    # simple: use defaults
     def rpx_token
       data = RPXNew.user_data(params[:token],'YOUR RPX API KEY') # :name=>'John Doe',:email=>'john@doe.com',:identifier=>'blug.google.com/openid/dsdfsdfs3f3'
       #when no user_data was found, data is empty, you may want to handle that seperatly...
@@ -38,6 +42,12 @@ Controller
       self.current_user = User.find_by_identifier(data[:identifier]) || User.create!(data)
       redirect_to '/'
     end
+
+    # process the raw response yourself:
+    RPXNew.user_data(params[:token],'YOUR RPX API KEY'){|raw| {:email=>raw['profile']['verifiedEmail']}}
+
+    # request extended parameters (most users and APIs do not supply them)
+    RPXNew.user_data(params[:token],'YOUR RPX API KEY',:extended=>'true'){|raw| ...have a look at the RPX API DOCS...}
 
 Author
 ======
