@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rpx_now}
-  s.version = "0.1"
+  s.version = "0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
-  s.date = %q{2009-01-23}
+  s.date = %q{2009-01-24}
   s.description = %q{Helper to simplify RPX Now user login/creation}
   s.email = %q{grosser.michael@gmail.com}
   s.extra_rdoc_files = ["lib/rpx_now.rb", "README.markdown"]
