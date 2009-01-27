@@ -9,6 +9,28 @@ module RPXNow
     if block_given? then yield(data) else read_user_data_from_response(data) end
   end
 
+  def map(identifier,primary_key,api_key)
+    raise "NO API KEY" if api_key.blank?
+    data = post('https://rpxnow.com/api/v2/map',{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key}.merge(parameters))
+    data = ActiveSupport::JSON.decode(data)
+    return true if data['stat'] == 'ok'
+  end
+  
+  def unmap(identifier,primary_key,api_key)
+    raise "NO API KEY" if api_key.blank?
+    data = post('https://rpxnow.com/api/v2/unmap',{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key}.merge(parameters))
+    data = ActiveSupport::JSON.decode(data)
+    return true if data['stat'] == 'ok'
+  end
+
+  def mappings(primary_key,api_key)
+    raise "NO API KEY" if api_key.blank?
+    data = post('https://rpxnow.com/api/v2/mappings',{:primaryKey=>primary_key,:apiKey=>api_key}.merge(parameters))
+    data = ActiveSupport::JSON.decode(data)
+    return if data['err']
+    data['identifiers']
+  end
+
   def embed_code(subdomain,url)
 <<EOF
 <iframe src="https://#{subdomain}.rpxnow.com/openid/embed?token_url=#{url}"
