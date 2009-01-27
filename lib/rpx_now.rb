@@ -19,7 +19,7 @@ EOF
 
   def popup_code(text,subdomain,url,options={})
 <<EOF
-<a class="rpxnow" onclick="return false;" href="https://rathershort.rpxnow.com/openid/v2/signin?token_url=#{url}">
+<a class="rpxnow" onclick="return false;" href="https://#{subdomain}.rpxnow.com/openid/v2/signin?token_url=#{url}">
   #{text}
 </a>
 <script src="https://rpxnow.com/openid/v2/widget" type="text/javascript"></script>
