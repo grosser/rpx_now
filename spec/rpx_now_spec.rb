@@ -60,4 +60,46 @@ describe RPXNow do
       RPXNow.send(:read_user_data_from_response,{'profile'=>{'email'=>'1@xxx.com'}})[:name].should == '1'
     end
   end
+  describe :map do
+    def fake_response
+      '{"stat":"ok"}'
+    end
+    it "raises when api-key is missing" do
+      lambda{RPXNow.map('http://test.myopenid.com/',1,'').should raise_error('NO API KEY')}
+    end
+    
+    it "parses JSON response to map data" do
+      RPXNow.expects(:post).returns fake_response
+      RPXNow.map('http://test.myopenid.com',1, "x").should == true
+    end
+  end
+  
+  describe :unmap do
+    def fake_response
+      '{"stat":"ok"}'
+    end
+    it "raises when api-key is missing" do
+      lambda{RPXNow.unmap('http://test.myopenid.com/',1,'').should raise_error('NO API KEY')}
+    end
+    
+    it "parses JSON response to unmap data" do
+      RPXNow.expects(:post).returns fake_response
+      RPXNow.unmap('http://test.myopenid.com', 1, "x").should == true
+    end
+  end
+  
+  describe :mappings do
+    def fake_response
+      '{"stat":"ok", "identifiers": ["http:\/\/test.myopenid.com\/"]}'
+    end
+    it "raises when api-key is missing" do
+      lambda{RPXNow.mappings(1,'').should raise_error('NO API KEY')}
+    end
+    
+    it "parses JSON response to unmap data" do
+      RPXNow.expects(:post).returns fake_response
+      RPXNow.mappings(1, "x").should == ["http://test.myopenid.com/"]
+    end
+  end
+  
 end
