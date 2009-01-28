@@ -1,32 +1,31 @@
 require 'activesupport'
 module RPXNow
   extend self
+
+  # retrieve the users data, or return nil when nothing could be read/token was invalid
   def user_data(token,api_key,parameters={})
-    raise "NO API KEY" if api_key.blank?
-    data = json_post('https://rpxnow.com/api/v2/auth_info',{:token=>token,:apiKey=>api_key}.merge(parameters))
-    return if data['err']
+    begin
+      data = secure_json_post('https://rpxnow.com/api/v2/auth_info',{:token=>token,:apiKey=>api_key}.merge(parameters))
+    rescue ServerError
+      return nil if $!.to_s.to_s =~ /token/ #to_s returns a Hash, WTF?
+      raise
+    end
     if block_given? then yield(data) else read_user_data_from_response(data) end
   end
 
   # maps an identifier to an primary-key (e.g. user.id)
-  def map(identifier,primary_key,api_key,overwrite = true)
-    raise "NO API KEY" if api_key.blank?
-    data = json_post('https://rpxnow.com/api/v2/map',{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key,:overwrite=>overwrite})
-    return true if data['stat'] == 'ok'
+  def map(identifier,primary_key,api_key,options={})
+    secure_json_post('https://rpxnow.com/api/v2/map',{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key}.merge(options))
   end
 
   # un-maps an identifier to an primary-key (e.g. user.id)
   def unmap(identifier,primary_key,api_key)
-    raise "NO API KEY" if api_key.blank?
-    data = json_post('https://rpxnow.com/api/v2/unmap',{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key})
-    return true if data['stat'] == 'ok'
+    secure_json_post('https://rpxnow.com/api/v2/unmap',{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key})
   end
 
   # returns an array of identifiers which are mapped to one of your primary-keys (e.g. user.id)
   def mappings(primary_key,api_key)
-    raise "NO API KEY" if api_key.blank?
-    data = json_post('https://rpxnow.com/api/v2/mappings',{:primaryKey=>primary_key,:apiKey=>api_key})
-    return if data['err']
+    data = secure_json_post('https://rpxnow.com/api/v2/mappings',{:primaryKey=>primary_key,:apiKey=>api_key})
     data['identifiers']
   end
 
@@ -67,8 +66,11 @@ private
     data
   end
 
-  def json_post(url,data)
-    ActiveSupport::JSON.decode(post(url,data))
+  def secure_json_post(url,data={})
+    data = ActiveSupport::JSON.decode(post(url,data))
+    raise ServerError.new(data['err']) if data['err']
+    raise ServerError.new(data.inspect) unless data['stat']=='ok'
+    data
   end
 
   def post(url,data)
@@ -78,9 +80,14 @@ private
     if url.scheme == 'https'
       require 'net/https'
       http.use_ssl = true
+      #TODO do we really want to verify the certificate? http://notetoself.vrensk.com/2008/09/verified-https-in-ruby/
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
     resp, data = http.post(url.path, data.to_query)
     raise "POST FAILED:"+resp.inspect unless resp.is_a? Net::HTTPOK
-    return data
+    data
+  end
+
+  class ServerError < Exception
   end
 end

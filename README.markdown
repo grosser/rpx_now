@@ -36,7 +36,7 @@ Controller
 ----------
     # simple: use defaults
     def rpx_token
-      data = RPXNew.user_data(params[:token],'YOUR RPX API KEY') # :name=>'John Doe',:email=>'john@doe.com',:identifier=>'blug.google.com/openid/dsdfsdfs3f3'
+      data = RPXNow.user_data(params[:token],'YOUR RPX API KEY') # :name=>'John Doe',:email=>'john@doe.com',:identifier=>'blug.google.com/openid/dsdfsdfs3f3'
       #when no user_data was found, data is empty, you may want to handle that seperatly...
       #your user model must have an identifier column
       self.current_user = User.find_by_identifier(data[:identifier]) || User.create!(data)
@@ -44,10 +44,26 @@ Controller
     end
 
     # process the raw response yourself:
-    RPXNew.user_data(params[:token],'YOUR RPX API KEY'){|raw| {:email=>raw['profile']['verifiedEmail']}}
+    RPXNow.user_data(params[:token],'YOUR RPX API KEY'){|raw| {:email=>raw['profile']['verifiedEmail']}}
 
     # request extended parameters (most users and APIs do not supply them)
-    RPXNew.user_data(params[:token],'YOUR RPX API KEY',:extended=>'true'){|raw| ...have a look at the RPX API DOCS...}
+    RPXNow.user_data(params[:token],'YOUR RPX API KEY',:extended=>'true'){|raw| ...have a look at the RPX API DOCS...}
+
+Advanced: Mappings
+------------------
+You can map your primary keys (e.g. user.id) to identifiers, so that  
+users can login to the same account with multiple identifiers.
+    #add a mapping
+    RPXNow.map(identifier,primary_key,'YOUR RPX API KEY')
+
+    #remove a mapping
+    RPXNow.unmap(identifier,primary_key,'YOUR RPX API KEY')
+
+    #show mappings
+    RPXNow.mappings(primary_key,'YOUR RPX API KEY') # [identifier1,identifier2,...]
+
+After a primary key is mapped to an identifier, when a user logs in with this identifier,
+`RPXNow.user_data` will contain his 'primaryKey'
 
 Author
 ======
