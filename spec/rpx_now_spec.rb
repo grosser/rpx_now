@@ -32,6 +32,10 @@ describe RPXNow do
       RPXNow.expects(:post).returns fake_response
       RPXNow.user_data('','x').should == {:name=>'Michael Grosser',:email=>'grosser.michael@googlemail.com',:identifier=>"https://www.google.com/accounts/o8/id?id=AItOawmaOlyYezg_WfbgP_qjaUyHjmqZD9qNIVM"}
     end
+    it "adds a :id when primaryKey was returned" do
+      RPXNow.expects(:post).returns fake_response.sub('"verifiedEmail"','primaryKey:"2","verifiedEmail"')
+      RPXNow.user_data('','x')[:id].should == 2
+    end
     it "hands JSON response to supplied block" do
       RPXNow.expects(:post).returns "{x:1,stat:'ok'}"
       response = nil

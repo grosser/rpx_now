@@ -63,7 +63,7 @@ users can login to the same account with multiple identifiers.
     RPXNow.mappings(primary_key,'YOUR RPX API KEY') # [identifier1,identifier2,...]
 
 After a primary key is mapped to an identifier, when a user logs in with this identifier,
-`RPXNow.user_data` will contain his 'primaryKey'
+`RPXNow.user_data` will contain his `primaryKey` as `:id`.
 
 Author
 ======
