@@ -10,7 +10,7 @@ end
 
 #Gemspec
 porject_name = 'rpx_now'
-Echoe.new(porject_name , '0.2') do |p|
+Echoe.new(porject_name , '0.3') do |p|
   p.description    = "Helper to simplify RPX Now user login/creation"
   p.url            = "http://github.com/grosser/#{porject_name}"
   p.author         = "Michael Grosser"

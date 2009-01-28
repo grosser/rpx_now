@@ -62,8 +62,13 @@ users can login to the same account with multiple identifiers.
     #show mappings
     RPXNow.mappings(primary_key,'YOUR RPX API KEY') # [identifier1,identifier2,...]
 
-After a primary key is mapped to an identifier, when a user logs in with this identifier,
+After a primary key is mapped to an identifier, when a user logs in with this identifier,  
 `RPXNow.user_data` will contain his `primaryKey` as `:id`.
+
+TODO
+====
+ - remove activesupport dependency, use something smaller (json gem looks good but: JSON.parse("{x:1}")==BOOM)
+ - validate RPXNow.com SSL certificate
 
 Author
 ======
