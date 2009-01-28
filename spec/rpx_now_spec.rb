@@ -28,6 +28,9 @@ describe RPXNow do
     it "is empty when used with an invalid token" do
       RPXNow.user_data('xxxx',API_KEY).should == nil
     end
+    it "is empty when used with an unknown token" do
+      RPXNow.user_data('60d8c6374f4e9d290a7b55f39da7cc6435aef3d3',API_KEY).should == nil
+    end
     it "parses JSON response to user data" do
       RPXNow.expects(:post).returns fake_response
       RPXNow.user_data('','x').should == {:name=>'Michael Grosser',:email=>'grosser.michael@googlemail.com',:identifier=>"https://www.google.com/accounts/o8/id?id=AItOawmaOlyYezg_WfbgP_qjaUyHjmqZD9qNIVM"}

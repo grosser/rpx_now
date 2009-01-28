@@ -2,12 +2,12 @@ require 'activesupport'
 module RPXNow
   extend self
 
-  # retrieve the users data, or return nil when nothing could be read/token was invalid
+  # retrieve the users data, or return nil when nothing could be read/token was invalid or data was not found
   def user_data(token,api_key,parameters={})
     begin
       data = secure_json_post('https://rpxnow.com/api/v2/auth_info',{:token=>token,:apiKey=>api_key}.merge(parameters))
     rescue ServerError
-      return nil if $!.to_s.to_s =~ /token/ #to_s returns a Hash, WTF?
+      return nil if $!.to_s =~ /token/ or $!.to_s=~/Data not found/
       raise
     end
     if block_given? then yield(data) else read_user_data_from_response(data) end
@@ -90,5 +90,9 @@ private
   end
 
   class ServerError < Exception
+    #to_s returns message(which is a hash...)
+    def to_s
+      super.to_s
+    end
   end
 end
