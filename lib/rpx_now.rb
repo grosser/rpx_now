@@ -3,30 +3,29 @@ module RPXNow
   extend self
   def user_data(token,api_key,parameters={})
     raise "NO API KEY" if api_key.blank?
-    data = post('https://rpxnow.com/api/v2/auth_info',{:token=>token,:apiKey=>api_key}.merge(parameters))
-    data = ActiveSupport::JSON.decode(data)
+    data = json_post('https://rpxnow.com/api/v2/auth_info',{:token=>token,:apiKey=>api_key}.merge(parameters))
     return if data['err']
     if block_given? then yield(data) else read_user_data_from_response(data) end
   end
 
+  # maps an identifier to an primary-key (e.g. user.id)
   def map(identifier,primary_key,api_key,overwrite = true)
     raise "NO API KEY" if api_key.blank?
-    data = post('https://rpxnow.com/api/v2/map',{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key,:overwrite=>overwrite})
-    data = ActiveSupport::JSON.decode(data)
-    return true if data['stat'] == 'ok'
-  end
-  
-  def unmap(identifier,primary_key,api_key)
-    raise "NO API KEY" if api_key.blank?
-    data = post('https://rpxnow.com/api/v2/unmap',{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key})
-    data = ActiveSupport::JSON.decode(data)
+    data = json_post('https://rpxnow.com/api/v2/map',{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key,:overwrite=>overwrite})
     return true if data['stat'] == 'ok'
   end
 
+  # un-maps an identifier to an primary-key (e.g. user.id)
+  def unmap(identifier,primary_key,api_key)
+    raise "NO API KEY" if api_key.blank?
+    data = json_post('https://rpxnow.com/api/v2/unmap',{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key})
+    return true if data['stat'] == 'ok'
+  end
+
+  # returns an array of identifiers which are mapped to one of your primary-keys (e.g. user.id)
   def mappings(primary_key,api_key)
     raise "NO API KEY" if api_key.blank?
-    data = post('https://rpxnow.com/api/v2/mappings',{:primaryKey=>primary_key,:apiKey=>api_key})
-    data = ActiveSupport::JSON.decode(data)
+    data = json_post('https://rpxnow.com/api/v2/mappings',{:primaryKey=>primary_key,:apiKey=>api_key})
     return if data['err']
     data['identifiers']
   end
@@ -66,6 +65,10 @@ private
     data[:email] = user_data['verifiedEmail'] || user_data['email']
     data[:name] = user_data['displayName'] || user_data['preferredUsername'] || data[:email].sub(/@.*/,'')
     data
+  end
+
+  def json_post(url,data)
+    ActiveSupport::JSON.decode(post(url,data))
   end
 
   def post(url,data)
