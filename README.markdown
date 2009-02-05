@@ -35,10 +35,11 @@ View
 Controller
 ----------
     # simple: use defaults
+    # user_data returns e.g. {:name=>'John Doe',:email=>'john@doe.com',:identifier=>'blug.google.com/openid/dsdfsdfs3f3'}
+    # when no user_data was found (invalid token supplied), data is empty, you may want to handle that seperatly...
+    # your user model must have an identifier column
     def rpx_token
-      data = RPXNow.user_data(params[:token],'YOUR RPX API KEY') # :name=>'John Doe',:email=>'john@doe.com',:identifier=>'blug.google.com/openid/dsdfsdfs3f3'
-      #when no user_data was found, data is empty, you may want to handle that seperatly...
-      #your user model must have an identifier column
+      data = RPXNow.user_data(params[:token],'YOUR RPX API KEY')
       self.current_user = User.find_by_identifier(data[:identifier]) || User.create!(data)
       redirect_to '/'
     end
