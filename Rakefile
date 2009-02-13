@@ -9,13 +9,19 @@ task :test do |t|
 end
 
 #Gemspec
-porject_name = 'rpx_now'
-Echoe.new(porject_name , '0.3.1') do |p|
-  p.description    = "Helper to simplify RPX Now user login/creation"
-  p.url            = "http://github.com/grosser/#{porject_name}"
-  p.author         = "Michael Grosser"
-  p.email          = "grosser.michael@gmail.com"
-  p.dependencies   = %w[activesupport]
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gem|
+    porject_name = 'rpx_now'
+    gem.name = porject_name
+    gem.summary = "Helper to simplify RPX Now user login/creation"
+    gem.email = "grosser.michael@gmail.com"
+    gem.homepage = "http://github.com/grosser/#{porject_name}"
+    gem.authors = ["Michael Grosser"]
+    gem.add_dependency ['activesupport']
+  end
+rescue LoadError
+  puts "Jeweler, or one of its dependencies, is not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
 
 task :update_gemspec => [:manifest, :build_gemspec]
