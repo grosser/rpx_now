@@ -2,10 +2,13 @@ require 'activesupport'
 module RPXNow
   extend self
 
+  attr_writer :api_key
+
   # retrieve the users data, or return nil when nothing could be read/token was invalid or data was not found
-  def user_data(token,api_key,parameters={})
+  def user_data(token,*args)
+    api_key, parameters = extract_key_and_options(args)
     begin
-      data = secure_json_post('https://rpxnow.com/api/v2/auth_info',{:token=>token,:apiKey=>api_key}.merge(parameters))
+      data = secure_json_post('https://rpxnow.com/api/v2/auth_info',{:token=>token,:apiKey=>api_key||@api_key}.merge(parameters))
     rescue ServerError
       return nil if $!.to_s =~ /token/ or $!.to_s=~/Data not found/
       raise
@@ -14,18 +17,19 @@ module RPXNow
   end
 
   # maps an identifier to an primary-key (e.g. user.id)
-  def map(identifier,primary_key,api_key,options={})
-    secure_json_post('https://rpxnow.com/api/v2/map',{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key}.merge(options))
+  def map(identifier,primary_key,*args)
+    api_key, options = extract_key_and_options(args)
+    secure_json_post('https://rpxnow.com/api/v2/map',{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key||@api_key}.merge(options))
   end
 
   # un-maps an identifier to an primary-key (e.g. user.id)
-  def unmap(identifier,primary_key,api_key)
-    secure_json_post('https://rpxnow.com/api/v2/unmap',{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key})
+  def unmap(identifier,primary_key,api_key=nil)
+    secure_json_post('https://rpxnow.com/api/v2/unmap',{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key||@api_key})
   end
 
   # returns an array of identifiers which are mapped to one of your primary-keys (e.g. user.id)
-  def mappings(primary_key,api_key)
-    data = secure_json_post('https://rpxnow.com/api/v2/mappings',{:primaryKey=>primary_key,:apiKey=>api_key})
+  def mappings(primary_key,api_key=nil)
+    data = secure_json_post('https://rpxnow.com/api/v2/mappings',{:primaryKey=>primary_key,:apiKey=>api_key||@api_key})
     data['identifiers']
   end
 
@@ -56,6 +60,19 @@ EOF
   end
 
 private
+  # [API_KEY,{options}] or
+  # [{options}] or
+  # []
+  def extract_key_and_options(args)
+    if args.length == 2
+      [args[0],args[1]]
+    elsif args.length==1
+      if args[0].is_a? Hash then [@api_key,args[0]] else [args[0],{}] end
+    else
+      raise unless @api_key
+      [@api_key,{}]
+    end
+  end
 
   def read_user_data_from_response(response)
     user_data = response['profile']

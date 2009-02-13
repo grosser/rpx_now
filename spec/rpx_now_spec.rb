@@ -3,6 +3,18 @@ require File.expand_path("spec_helper", File.dirname(__FILE__))
 API_KEY = '4b339169026742245b754fa338b9b0aebbd0a733'
 
 describe RPXNow do
+  before do
+    RPXNow.api_key=nil
+  end
+
+  describe :api_key= do
+    it "stores the api key, so i do not have to supply everytime" do
+      RPXNow.api_key='XX'
+      RPXNow.expects(:post).with{|x,data|data[:apiKey]=='XX'}.returns '{"stat":"ok"}'
+      RPXNow.mappings(1)
+    end
+  end
+
   describe :embed_code do
     it "contains the subdomain" do
       RPXNow.embed_code('xxx','my_url').should =~ /xxx/

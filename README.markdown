@@ -50,6 +50,10 @@ Controller
     # request extended parameters (most users and APIs do not supply them)
     RPXNow.user_data(params[:token],'YOUR RPX API KEY',:extended=>'true'){|raw| ...have a look at the RPX API DOCS...}
 
+    # you can provide the api key once, and leave it out on all following calls
+    RPXNow.api_key = 'YOUR RPX API KEY'
+    RPXNow.user_data(params[:token],:extended=>'true')
+
 Advanced: Mappings
 ------------------
 You can map your primary keys (e.g. user.id) to identifiers, so that  

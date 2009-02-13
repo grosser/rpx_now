@@ -2,15 +2,15 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rpx_now}
-  s.version = "0.3"
+  s.version = "0.3.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
-  s.date = %q{2009-01-28}
+  s.date = %q{2009-02-13}
   s.description = %q{Helper to simplify RPX Now user login/creation}
   s.email = %q{grosser.michael@gmail.com}
   s.extra_rdoc_files = ["CHANGELOG", "lib/rpx_now.rb", "README.markdown"]
-  s.files = ["Manifest", "CHANGELOG", "lib/rpx_now.rb", "spec/rpx_now_spec.rb", "spec/spec_helper.rb", "rpx_now.gemspec", "init.rb", "Rakefile", "README.markdown"]
+  s.files = ["Manifest", "CHANGELOG", "lib/rpx_now.rb", "spec/rpx_now_spec.rb", "spec/spec_helper.rb", "init.rb", "Rakefile", "README.markdown", "rpx_now.gemspec"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/grosser/rpx_now}
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Rpx_now", "--main", "README.markdown"]
