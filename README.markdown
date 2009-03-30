@@ -2,6 +2,8 @@ Problem
 =======
  - OpenID is complex
  - OpenID is not universally used
+ - Facebook / Myspace / MS-LiveId / AOL connections require different libraries and knowledge
+ - Multiple heterogenouse providers are hard to map to a single user
 
 Solution
 ========
@@ -77,6 +79,6 @@ TODO
 
 Author
 ======
-Michael Grosser  
+[Michael Grosser](http://pragmatig.wordpress.com)  
 grosser.michael@gmail.com  
 Hereby placed under public domain, do what you want, just do not hold me accountable...  

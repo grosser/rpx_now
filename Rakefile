@@ -2,7 +2,7 @@ require 'rubygems'
 require 'echoe'
 
 desc "Run all specs in spec directory"
-task :test do |t|
+task :default do |t|
   options = "--colour --format progress --loadby --reverse"
   files = FileList['spec/**/*_spec.rb']
   system("spec #{options} #{files}")
