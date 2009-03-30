@@ -21,7 +21,7 @@ Install
 =======
  - As Rails plugin: `script/plugin install git://github.com/grosser/rpx_now.git `
  - As gem: `sudo gem install grosser-rpx_now --source http://gems.github.com/`
- - As gem from source: `git clone git://github.com/grosser/rpx_now.git`,`cd rpx_now`,`rake manifest`,`rake install`
+ - As gem from source: `git clone git://github.com/grosser/rpx_now.git`,`cd rpx_now`,`rake install`
 
 Examples
 ========
