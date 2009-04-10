@@ -58,6 +58,10 @@ EOF
 </script>
 EOF
   end
+  
+  def unobtrusive_popup_code(text, subdomain, url, version = 2)
+    "<a class=\"rpxnow\" href=\"https://#{subdomain}.rpxnow.com/openid/v#{version}/signin?token_url=#{url}\">#{text}</a>"
+  end
 
 private
   # [API_KEY,{options}] or

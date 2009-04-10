@@ -32,6 +32,16 @@ describe RPXNow do
       RPXNow.popup_code('x','y','z',:language=>'de').should =~ /RPXNOW.language_preference = 'de'/
     end
   end
+  
+  describe :unobtrusive_popup_code do
+    it "should default to widget version 2" do
+      RPXNow.unobtrusive_popup_code('sign on', 'subdomain', 'http://fake.domain.com/').should == "<a class=\"rpxnow\" href=\"https://subdomain.rpxnow.com/openid/v2/signin?token_url=http://fake.domain.com/\">sign on</a>"
+    end
+    
+    it "should allow you to change the widget version" do
+      RPXNow.unobtrusive_popup_code('sign on', 'subdomain', 'http://fake.domain.com/', 300).should == "<a class=\"rpxnow\" href=\"https://subdomain.rpxnow.com/openid/v300/signin?token_url=http://fake.domain.com/\">sign on</a>"
+    end
+  end
 
   describe :user_data do
     def fake_response
