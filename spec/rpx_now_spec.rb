@@ -10,7 +10,7 @@ describe RPXNow do
   describe :api_key= do
     it "stores the api key, so i do not have to supply everytime" do
       RPXNow.api_key='XX'
-      RPXNow.expects(:post).with{|x,data|data[:apiKey]=='XX'}.returns '{"stat":"ok"}'
+      RPXNow.expects(:post).with{|x,data|data[:apiKey]=='XX'}.returns "{\"stat\":\"ok\"}"
       RPXNow.mappings(1)
     end
   end
@@ -45,7 +45,7 @@ describe RPXNow do
 
   describe :user_data do
     def fake_response
-      '{"profile":{"verifiedEmail":"grosser.michael@googlemail.com","displayName":"Michael Grosser","preferredUsername":"grosser.michael","identifier":"https:\/\/www.google.com\/accounts\/o8\/id?id=AItOawmaOlyYezg_WfbgP_qjaUyHjmqZD9qNIVM","email":"grosser.michael@gmail.com"},"stat":"ok"}'
+      "{\"profile\":{\"verifiedEmail\":\"grosser.michael@googlemail.com\",\"displayName\":\"Michael Grosser\",\"preferredUsername\":\"grosser.michael\",\"identifier\":\"https:\/\/www.google.com\/accounts\/o8\/id?id=AItOawmaOlyYezg_WfbgP_qjaUyHjmqZD9qNIVM\",\"email\":\"grosser.michael@gmail.com\"},\"stat\":\"ok\"}"
     end
     it "is empty when used with an invalid token" do
       RPXNow.user_data('xxxx',API_KEY).should == nil
@@ -58,17 +58,17 @@ describe RPXNow do
       RPXNow.user_data('','x').should == {:name=>'Michael Grosser',:email=>'grosser.michael@googlemail.com',:identifier=>"https://www.google.com/accounts/o8/id?id=AItOawmaOlyYezg_WfbgP_qjaUyHjmqZD9qNIVM"}
     end
     it "adds a :id when primaryKey was returned" do
-      RPXNow.expects(:post).returns fake_response.sub('"verifiedEmail"','primaryKey:"2","verifiedEmail"')
+      RPXNow.expects(:post).returns fake_response.sub("\"verifiedEmail\"", "\"primaryKey\":\"2\",\"verifiedEmail\"")
       RPXNow.user_data('','x')[:id].should == 2
     end
     it "hands JSON response to supplied block" do
-      RPXNow.expects(:post).returns "{x:1,stat:'ok'}"
+      RPXNow.expects(:post).returns "{\"x\":\"1\",\"stat\":\"ok\"}"
       response = nil
       RPXNow.user_data('','x'){|data| response = data}
-      response.should == {'x'=>1,'stat'=>'ok'}
+      response.should == {"x" => "1", "stat" => "ok"}
     end
     it "returns what the supplied block returned" do
-      RPXNow.expects(:post).returns "{x:1,stat:'ok'}"
+      RPXNow.expects(:post).returns "{\"x\":\"1\",\"stat\":\"ok\"}"
       RPXNow.user_data('','x'){|data| "x"}.should == 'x'
     end
     it "can send additional parameters" do
@@ -90,36 +90,36 @@ describe RPXNow do
 
   describe :secure_json_post do
     it "parses json when status is ok" do
-      RPXNow.expects(:post).returns '{stat:"ok",data:"xx"}'
-      RPXNow.send(:secure_json_post,'xx')['data'].should == 'xx'
+      RPXNow.expects(:post).returns "{\"stat\":\"ok\",\"data\":\"xx\"}"
+      RPXNow.send(:secure_json_post, "\"xx\"")['data'].should == "xx"
     end
     it "raises when there is a communication error" do
-      RPXNow.expects(:post).returns '{"err":"wtf",stat:"ok"}'
+      RPXNow.expects(:post).returns "{\"err\":\"wtf\",\"stat\":\"ok\"}"
       lambda{RPXNow.send(:secure_json_post,'xx')}.should raise_error RPXNow::ServerError
     end
     it "raises when status is not ok" do
-      RPXNow.expects(:post).returns '{"stat":"err"}'
+      RPXNow.expects(:post).returns "{\"stat\":\"err\"}"
       lambda{RPXNow.send(:secure_json_post,'xx')}.should raise_error RPXNow::ServerError
     end
   end
 
   describe :mappings do
     it "parses JSON response to unmap data" do
-      RPXNow.expects(:post).returns '{"stat":"ok", "identifiers": ["http://test.myopenid.com/"]}'
+      RPXNow.expects(:post).returns "{\"stat\":\"ok\", \"identifiers\": [\"http://test.myopenid.com/\"]}"
       RPXNow.mappings(1, "x").should == ["http://test.myopenid.com/"]
     end
   end
 
   describe :map do
     it "adds a mapping" do
-      RPXNow.expects(:post).returns '{"stat":"ok"}'
+      RPXNow.expects(:post).returns "{\"stat\":\"ok\"}"
       RPXNow.map('http://test.myopenid.com',1, API_KEY)
     end
   end
 
   describe :unmap do
     it "unmaps a indentifier" do
-      RPXNow.expects(:post).returns '{"stat":"ok"}'
+      RPXNow.expects(:post).returns "{\"stat\":\"ok\"}"
       RPXNow.unmap('http://test.myopenid.com', 1, "x")
     end
   end
@@ -152,6 +152,17 @@ describe RPXNow do
       RPXNow.map(@k1, 1, API_KEY)
       RPXNow.map(@k1, 1, API_KEY)
       RPXNow.mappings(1,API_KEY).should == [@k1]
+    end
+  end
+  
+  describe :to_query do
+    it "should not depend on active support" do
+      RPXNow.send('to_query', {:one => " abc"}).should == "one= abc"
+    end
+    
+    it "should use ActiveSupport core extensions" do
+      require 'activesupport'
+      RPXNow.send('to_query', {:one => " abc"}).should == "one=+abc"
     end
   end
 end

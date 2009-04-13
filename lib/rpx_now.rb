@@ -1,4 +1,5 @@
-require 'activesupport'
+require 'json'
+
 module RPXNow
   extend self
 
@@ -89,7 +90,7 @@ private
   end
 
   def secure_json_post(url,data={})
-    data = ActiveSupport::JSON.decode(post(url,data))
+    data = JSON.parse(post(url,data))
     raise ServerError.new(data['err']) if data['err']
     raise ServerError.new(data.inspect) unless data['stat']=='ok'
     data
@@ -105,9 +106,21 @@ private
       #TODO do we really want to verify the certificate? http://notetoself.vrensk.com/2008/09/verified-https-in-ruby/
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
-    resp, data = http.post(url.path, data.to_query)
+    resp, data = http.post(url.path, to_query(data))
     raise "POST FAILED:"+resp.inspect unless resp.is_a? Net::HTTPOK
     data
+  end
+
+  def to_query(data = {})
+    return data.to_query if Hash.respond_to?('to_query')
+    return "" if data.empty?
+    
+    query_data = []
+    data.each do |k, v|
+      query_data << "#{k}=#{v}"
+    end
+    
+    return query_data.join('&')
   end
 
   class ServerError < Exception
