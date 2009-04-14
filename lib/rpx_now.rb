@@ -9,9 +9,8 @@ module RPXNow
 
   # retrieve the users data, or return nil when nothing could be read/token was invalid or data was not found
   def user_data(token, *args)
-    api_key, options = extract_key_and_options(args)
-    version = extract_version! options
-    
+    api_key, version, options = extract_key_version_and_options!(args)
+
     begin
       data = secure_json_post("https://rpxnow.com/api/v#{version}/auth_info",{:token=>token,:apiKey=>api_key||@api_key}.merge(options))
     rescue ServerError
@@ -23,23 +22,20 @@ module RPXNow
 
   # maps an identifier to an primary-key (e.g. user.id)
   def map(identifier, primary_key, *args)
-    api_key, options = extract_key_and_options(args)
-    version = extract_version! options
-    secure_json_post("https://rpxnow.com/api/v#{version}/map",{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key||@api_key}.merge(options))
+    api_key, version, options = extract_key_version_and_options!(args)
+    secure_json_post("https://rpxnow.com/api/v#{version}/map",{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key}.merge(options))
   end
 
   # un-maps an identifier to an primary-key (e.g. user.id)
   def unmap(identifier, primary_key, *args)
-    api_key, options = extract_key_and_options(args)
-    version = extract_version! options
-    secure_json_post("https://rpxnow.com/api/v#{version}/unmap",{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key||@api_key})
+    api_key, version, options = extract_key_version_and_options!(args)
+    secure_json_post("https://rpxnow.com/api/v#{version}/unmap",{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key})
   end
 
   # returns an array of identifiers which are mapped to one of your primary-keys (e.g. user.id)
   def mappings(primary_key, *args)
-    api_key, options = extract_key_and_options(args)
-    version = extract_version! options
-    data = secure_json_post("https://rpxnow.com/api/v#{version}/mappings",{:primaryKey=>primary_key,:apiKey=>api_key||@api_key})
+    api_key, version, options = extract_key_version_and_options!(args)
+    data = secure_json_post("https://rpxnow.com/api/v#{version}/mappings",{:primaryKey=>primary_key,:apiKey=>api_key})
     data['identifiers']
   end
 
@@ -60,10 +56,6 @@ EOF
   end
 
   private
-
-  def extract_version!(options)
-    options.delete(:version) || widget_version
-  end
 
   def unobtrusive_popup_code(text, subdomain, url, options={})
     version = extract_version! options
@@ -89,6 +81,12 @@ EOF
 EOF
   end
 
+  def extract_key_version_and_options!(args)
+    key, options = extract_key_and_options(args)
+    version = extract_version! options
+    [key, version, options]
+  end
+
   # [API_KEY,{options}] or
   # [{options}] or
   # []
@@ -101,6 +99,10 @@ EOF
       raise unless @api_key
       [@api_key,{}]
     end
+  end
+
+  def extract_version!(options)
+    options.delete(:version) || widget_version
   end
 
   def read_user_data_from_response(response)
