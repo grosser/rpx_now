@@ -1,1 +1,11 @@
-0.3 -- RPXNow::ServerError will be thrown when something is invalid/goes wrong, so watch out (not for invalid tokens in user_data)...
+0.4 (on going)
+----
+	* Added support for unobtrusive code generation. This will make the gem play nicely with developers creating unobtrusive pages with frameworks such as jQuery;
+	* The RPXNOW JSON responses are now parsed by Florian Frank JSON gem (http://json.rubyforge.org/);
+	* Removed the dependency of ActiveSupport. However, if present, ActiveSupport will be used due to its convenience methods Array#to_query and Hash#to_query.
+	* Added support for multiple versions of the widget. By default, everything will point to version 2;
+	* The specs have been updated.
+
+0.3
+----
+	* RPXNow::ServerError will be thrown when something is invalid/goes wrong, so watch out (not for invalid tokens in user_data)...
