@@ -7,12 +7,14 @@ module RPXNow
   attr_accessor :widget_version
   self.widget_version = 2
 
-  # retrieve the users data, or return nil when nothing could be read/token was invalid or data was not found
+  # retrieve the users data, or return nil when nothing could be read/token was invalid
+  # or data was not found
   def user_data(token, *args)
     api_key, version, options = extract_key_version_and_options!(args)
+    options = {:token=>token,:apiKey=>api_key}.merge options
 
     begin
-      data = secure_json_post("https://rpxnow.com/api/v#{version}/auth_info",{:token=>token,:apiKey=>api_key||@api_key}.merge(options))
+      data = secure_json_post("https://rpxnow.com/api/v#{version}/auth_info", options)
     rescue ServerError
       return nil if $!.to_s =~ /token/ or $!.to_s=~/Data not found/
       raise
@@ -23,19 +25,22 @@ module RPXNow
   # maps an identifier to an primary-key (e.g. user.id)
   def map(identifier, primary_key, *args)
     api_key, version, options = extract_key_version_and_options!(args)
-    secure_json_post("https://rpxnow.com/api/v#{version}/map",{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key}.merge(options))
+    options = {:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key}.merge options
+    secure_json_post("https://rpxnow.com/api/v#{version}/map", options)
   end
 
   # un-maps an identifier to an primary-key (e.g. user.id)
   def unmap(identifier, primary_key, *args)
     api_key, version, options = extract_key_version_and_options!(args)
-    secure_json_post("https://rpxnow.com/api/v#{version}/unmap",{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key})
+    options = {:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key}.merge options
+    secure_json_post("https://rpxnow.com/api/v#{version}/unmap", options)
   end
 
   # returns an array of identifiers which are mapped to one of your primary-keys (e.g. user.id)
   def mappings(primary_key, *args)
     api_key, version, options = extract_key_version_and_options!(args)
-    data = secure_json_post("https://rpxnow.com/api/v#{version}/mappings",{:primaryKey=>primary_key,:apiKey=>api_key})
+    options = {:primaryKey=>primary_key,:apiKey=>api_key}.merge options
+    data = secure_json_post("https://rpxnow.com/api/v#{version}/mappings", options)
     data['identifiers']
   end
 
@@ -138,9 +143,10 @@ EOF
   end
 
   def to_query(data = {})
-    return data.to_query if Hash.respond_to?('to_query')
+    return data.to_query if Hash.respond_to? :to_query
     return "" if data.empty?
-    
+
+    #simpler to_query
     query_data = []
     data.each do |k, v|
       query_data << "#{k}=#{v}"
