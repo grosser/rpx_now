@@ -10,7 +10,7 @@ describe RPXNow do
   describe :api_key= do
     it "stores the api key, so i do not have to supply everytime" do
       RPXNow.api_key='XX'
-      RPXNow.expects(:post).with{|x,data|data[:apiKey]=='XX'}.returns "{\"stat\":\"ok\"}"
+      RPXNow.expects(:post).with{|x,data|data[:apiKey]=='XX'}.returns %Q({"stat":"ok"})
       RPXNow.mappings(1)
     end
   end
@@ -27,19 +27,20 @@ describe RPXNow do
 
   describe :popup_code do
     it "defaults to obtrusive output" do
-      RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/').should_not == "<a class=\"rpxnow\" href=\"https://subdomain.rpxnow.com/openid/v2/signin?token_url=http://fake.domain.com/\">sign on</a>"
+      RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/').should =~ /script src=/
     end
     
-    it "allows you to retrieve an unobtrusive version of the code for a specific widget version" do
-      RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/', { :unobtrusive => true, :version => 300 }).should == "<a class=\"rpxnow\" href=\"https://subdomain.rpxnow.com/openid/v300/signin?token_url=http://fake.domain.com/\">sign on</a>"      
+    it "can build an unobtrusive widget with specific version" do
+      expected = %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v300/signin?token_url=http://fake.domain.com/">sign on</a>)
+      RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/', { :unobtrusive => true, :version => 300 }).should == expected
     end
     
-    it "allows you to specify the version of the widget that you wish to use" do
-      RPXNow.popup_code('x','y','z', :version => 300).should =~ /v300/
+    it "allows to specify the version of the widget" do
+      RPXNow.popup_code('x','y','z', :version => 300).should =~ %r(/openid/v300/signin)
     end
     
-    it "defaults to version 2 of the widget should you omit the version number" do
-      RPXNow.popup_code('x','y','z').should =~ /v2/
+    it "defaults to widget version 2" do
+      RPXNow.popup_code('x','y','z').should =~ %r(/openid/v2/signin)
     end
     
     it "defaults to english" do
@@ -53,7 +54,7 @@ describe RPXNow do
 
   describe :user_data do
     def fake_response
-      "{\"profile\":{\"verifiedEmail\":\"grosser.michael@googlemail.com\",\"displayName\":\"Michael Grosser\",\"preferredUsername\":\"grosser.michael\",\"identifier\":\"https:\/\/www.google.com\/accounts\/o8\/id?id=AItOawmaOlyYezg_WfbgP_qjaUyHjmqZD9qNIVM\",\"email\":\"grosser.michael@gmail.com\"},\"stat\":\"ok\"}"
+      %Q({"profile":{"verifiedEmail":"grosser.michael@googlemail.com","displayName":"Michael Grosser","preferredUsername":"grosser.michael","identifier":"https:\/\/www.google.com\/accounts\/o8\/id?id=AItOawmaOlyYezg_WfbgP_qjaUyHjmqZD9qNIVM","email":"grosser.michael@gmail.com"},"stat":"ok"})
     end
     
     it "is empty when used with an invalid token" do
@@ -70,19 +71,19 @@ describe RPXNow do
     end
     
     it "adds a :id when primaryKey was returned" do
-      RPXNow.expects(:post).returns fake_response.sub("\"verifiedEmail\"", "\"primaryKey\":\"2\",\"verifiedEmail\"")
+      RPXNow.expects(:post).returns fake_response.sub(%Q("verifiedEmail"), %Q("primaryKey":"2","verifiedEmail"))
       RPXNow.user_data('','x')[:id].should == 2
     end
     
     it "hands JSON response to supplied block" do
-      RPXNow.expects(:post).returns "{\"x\":\"1\",\"stat\":\"ok\"}"
+      RPXNow.expects(:post).returns %Q({"x":"1","stat":"ok"})
       response = nil
       RPXNow.user_data('','x'){|data| response = data}
       response.should == {"x" => "1", "stat" => "ok"}
     end
     
     it "returns what the supplied block returned" do
-      RPXNow.expects(:post).returns "{\"x\":\"1\",\"stat\":\"ok\"}"
+      RPXNow.expects(:post).returns %Q({"x":"1","stat":"ok"})
       RPXNow.user_data('','x'){|data| "x"}.should == 'x'
     end
     
@@ -106,38 +107,38 @@ describe RPXNow do
 
   describe :secure_json_post do
     it "parses json when status is ok" do
-      RPXNow.expects(:post).returns "{\"stat\":\"ok\",\"data\":\"xx\"}"
-      RPXNow.send(:secure_json_post, "\"xx\"")['data'].should == "xx"
+      RPXNow.expects(:post).returns %Q({"stat":"ok","data":"xx"})
+      RPXNow.send(:secure_json_post, %Q("yy"))['data'].should == "xx"
     end
     
     it "raises when there is a communication error" do
-      RPXNow.expects(:post).returns "{\"err\":\"wtf\",\"stat\":\"ok\"}"
+      RPXNow.expects(:post).returns %Q({"err":"wtf","stat":"ok"})
       lambda{RPXNow.send(:secure_json_post,'xx')}.should raise_error RPXNow::ServerError
     end
     
     it "raises when status is not ok" do
-      RPXNow.expects(:post).returns "{\"stat\":\"err\"}"
+      RPXNow.expects(:post).returns %Q({"stat":"err"})
       lambda{RPXNow.send(:secure_json_post,'xx')}.should raise_error RPXNow::ServerError
     end
   end
 
   describe :mappings do
     it "parses JSON response to unmap data" do
-      RPXNow.expects(:post).returns "{\"stat\":\"ok\", \"identifiers\": [\"http://test.myopenid.com/\"]}"
+      RPXNow.expects(:post).returns %Q({"stat":"ok", "identifiers": ["http://test.myopenid.com/"]})
       RPXNow.mappings(1, "x").should == ["http://test.myopenid.com/"]
     end
   end
 
   describe :map do
     it "adds a mapping" do
-      RPXNow.expects(:post).returns "{\"stat\":\"ok\"}"
+      RPXNow.expects(:post).returns %Q({"stat":"ok"})
       RPXNow.map('http://test.myopenid.com',1, API_KEY)
     end
   end
 
   describe :unmap do
     it "unmaps a indentifier" do
-      RPXNow.expects(:post).returns "{\"stat\":\"ok\"}"
+      RPXNow.expects(:post).returns %Q({"stat":"ok"})
       RPXNow.unmap('http://test.myopenid.com', 1, "x")
     end
   end
