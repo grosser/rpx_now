@@ -29,14 +29,16 @@ module RPXNow
   end
 
   # un-maps an identifier to an primary-key (e.g. user.id)
-  def unmap(identifier, primary_key, api_key = nil, version = nil)
-    version = extract_version! :version=>version
+  def unmap(identifier, primary_key, *args)
+    api_key, options = extract_key_and_options(args)
+    version = extract_version! options
     secure_json_post("https://rpxnow.com/api/v#{version}/unmap",{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key||@api_key})
   end
 
   # returns an array of identifiers which are mapped to one of your primary-keys (e.g. user.id)
-  def mappings(primary_key, api_key = nil, version = nil)
-    version = extract_version! :version=>version
+  def mappings(primary_key, *args)
+    api_key, options = extract_key_and_options(args)
+    version = extract_version! options
     data = secure_json_post("https://rpxnow.com/api/v#{version}/mappings",{:primaryKey=>primary_key,:apiKey=>api_key||@api_key})
     data['identifiers']
   end

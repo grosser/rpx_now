@@ -141,6 +141,11 @@ describe RPXNow do
       RPXNow.expects(:post).returns %Q({"stat":"ok"})
       RPXNow.unmap('http://test.myopenid.com', 1, "x")
     end
+
+    it "can be called with a specific version" do
+      RPXNow.expects(:secure_json_post).with{|a,b|a == "https://rpxnow.com/api/v300/unmap"}
+      RPXNow.unmap('http://test.myopenid.com', 1, :api_key=>'xxx', :version=>300)
+    end
   end
 
   describe :mapping_integration do
