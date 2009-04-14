@@ -5,14 +5,15 @@ module RPXNow
 
   attr_writer :api_key
   attr_accessor :widget_version
+  self.widget_version = 2
 
   # retrieve the users data, or return nil when nothing could be read/token was invalid or data was not found
   def user_data(token, *args)
-    api_key, parameters = extract_key_and_options(args)
-    set_widget_version(parameters)
+    api_key, options = extract_key_and_options(args)
+    version = extract_version! options
     
     begin
-      data = secure_json_post("https://rpxnow.com/api/v#{@widget_version}/auth_info",{:token=>token,:apiKey=>api_key||@api_key}.merge(parameters))
+      data = secure_json_post("https://rpxnow.com/api/v#{version}/auth_info",{:token=>token,:apiKey=>api_key||@api_key}.merge(options))
     rescue ServerError
       return nil if $!.to_s =~ /token/ or $!.to_s=~/Data not found/
       raise
@@ -23,20 +24,20 @@ module RPXNow
   # maps an identifier to an primary-key (e.g. user.id)
   def map(identifier, primary_key, *args)
     api_key, options = extract_key_and_options(args)
-    set_widget_version(options)
-     secure_json_post("https://rpxnow.com/api/v#{@widget_version}/map",{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key||@api_key}.merge(options))
+    version = extract_version! options
+    secure_json_post("https://rpxnow.com/api/v#{version}/map",{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key||@api_key}.merge(options))
   end
 
   # un-maps an identifier to an primary-key (e.g. user.id)
-  def unmap(identifier, primary_key, api_key = nil, version = 2)
-    set_widget_version({ :version => version })
-    secure_json_post("https://rpxnow.com/api/v#{@widget_version}/unmap",{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key||@api_key})
+  def unmap(identifier, primary_key, api_key = nil, version = nil)
+    version = extract_version! :version=>version
+    secure_json_post("https://rpxnow.com/api/v#{version}/unmap",{:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key||@api_key})
   end
 
   # returns an array of identifiers which are mapped to one of your primary-keys (e.g. user.id)
-  def mappings(primary_key, api_key = nil, version = 2)
-    set_widget_version({ :version => version })
-    data = secure_json_post("https://rpxnow.com/api/v#{@widget_version}/mappings",{:primaryKey=>primary_key,:apiKey=>api_key||@api_key})
+  def mappings(primary_key, api_key = nil, version = nil)
+    version = extract_version! :version=>version
+    data = secure_json_post("https://rpxnow.com/api/v#{version}/mappings",{:primaryKey=>primary_key,:apiKey=>api_key||@api_key})
     data['identifiers']
   end
 
@@ -49,33 +50,31 @@ EOF
   end
 
   def popup_code(text, subdomain, url, options = {})
-    set_widget_version(options)
-    unobtrusive = options[:unobtrusive] || false
-    
-    if unobtrusive
-      unobtrusive_popup_code(text, subdomain, url)
+    if options[:unobtrusive]
+      unobtrusive_popup_code(text, subdomain, url, options)
     else
       obtrusive_popup_code(text, subdomain, url, options)
     end
   end
 
-private
-  def set_widget_version(options)
-    @widget_version = 2 # default widget version
-    return unless options.is_a? Hash
-    @widget_version = options.delete(:version) || @widget_version
+  private
+
+  def extract_version!(options)
+    options.delete(:version) || widget_version
   end
 
-  def unobtrusive_popup_code(text, subdomain, url)
-    "<a class=\"rpxnow\" href=\"https://#{subdomain}.rpxnow.com/openid/v#{@widget_version}/signin?token_url=#{url}\">#{text}</a>"
+  def unobtrusive_popup_code(text, subdomain, url, options={})
+    version = extract_version! options
+    "<a class=\"rpxnow\" href=\"https://#{subdomain}.rpxnow.com/openid/v#{version}/signin?token_url=#{url}\">#{text}</a>"
   end
 
   def obtrusive_popup_code(text, subdomain, url, options = {})
-<<EOF
-<a class="rpxnow" onclick="return false;" href="https://#{subdomain}.rpxnow.com/openid/v#{@widget_version}/signin?token_url=#{url}">
+    version = extract_version! options
+    <<EOF
+<a class="rpxnow" onclick="return false;" href="https://#{subdomain}.rpxnow.com/openid/v#{version}/signin?token_url=#{url}">
   #{text}
 </a>
-<script src="https://rpxnow.com/openid/v#{@widget_version}/widget" type="text/javascript"></script>
+<script src="https://rpxnow.com/openid/v#{version}/widget" type="text/javascript"></script>
 <script type="text/javascript">
   //<![CDATA[
   RPXNOW.token_url = "#{url}";
