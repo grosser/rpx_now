@@ -8,7 +8,7 @@ Problem
 Solution
 ========
  - Use [RPX](http://rpxnow.com) for universal and usable user login
- - Make view/controller helpers for easy integration
+ - Use view/controller helpers for easy integration
 
 Usage
 =====
@@ -21,7 +21,7 @@ Install
 =======
  - As Rails plugin: `script/plugin install git://github.com/grosser/rpx_now.git `
  - As gem: `sudo gem install grosser-rpx_now --source http://gems.github.com/`
- - As gem from source: `git clone git://github.com/grosser/rpx_now.git`,`cd rpx_now`,`rake install`
+ - As gem from source: `git clone git://github.com/grosser/rpx_now.git`,`cd rpx_now && rake install`
 
 Examples
 ========
@@ -33,6 +33,8 @@ View
     <%=RPXNow.embed_code('mywebsite',rpx_token_sessions_url)%>
     OR
     <%=RPXNow.popup_code('Login here...','mywebsite',rpx_token_sessions_url,:language=>'de')%>
+
+    (`popup_code` can also be called with `:unobstrusive=>true`)
 
 Controller
 ----------
@@ -56,8 +58,15 @@ Controller
     RPXNow.api_key = 'YOUR RPX API KEY'
     RPXNow.user_data(params[:token],:extended=>'true')
 
-Advanced: Mappings
-------------------
+Advanced
+--------
+###Versions
+The version of RPXNow api can be set globally:
+    RPXNow.api_version = 2
+Or local on each call:
+    RPXNow.mappings(primary_key, :api_version=>1)
+
+###Mappings
 You can map your primary keys (e.g. user.id) to identifiers, so that  
 users can login to the same account with multiple identifiers.
     #add a mapping
@@ -74,11 +83,13 @@ After a primary key is mapped to an identifier, when a user logs in with this id
 
 TODO
 ====
- - remove activesupport dependency, use something smaller (json gem looks good but: JSON.parse("{x:1}")==BOOM)
  - validate RPXNow.com SSL certificate
 
 Author
 ======
+###Contributors
+ - [DBA](http://github.com/DBA)
+
 [Michael Grosser](http://pragmatig.wordpress.com)  
 grosser.michael@gmail.com  
 Hereby placed under public domain, do what you want, just do not hold me accountable...  

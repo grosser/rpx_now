@@ -1,5 +1,7 @@
-0.4 (on going)
+0.4
 ----
+  * The RPXNow.api_version= can be set globally
+  * Most methods now support :api_version=>'123', so you can specify the api_version on each call
 	* Added support for unobtrusive code generation. This will make the gem play nicely with developers creating unobtrusive pages with frameworks such as jQuery;
 	* The RPXNOW JSON responses are now parsed by Florian Frank JSON gem (http://json.rubyforge.org/);
 	* Removed the dependency of ActiveSupport. However, if present, ActiveSupport will be used due to its convenience methods Array#to_query and Hash#to_query.
