@@ -4,8 +4,8 @@ module RPXNow
   extend self
 
   attr_writer :api_key
-  attr_accessor :widget_version
-  self.widget_version = 2
+  attr_accessor :api_version
+  self.api_version = 2
 
   # retrieve the users data, or return nil when nothing could be read/token was invalid
   # or data was not found
@@ -107,7 +107,7 @@ EOF
   end
 
   def extract_version!(options)
-    options.delete(:version) || widget_version
+    options.delete(:api_version) || api_version
   end
 
   def read_user_data_from_response(response)

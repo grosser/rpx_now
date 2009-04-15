@@ -1,10 +1,12 @@
 require File.expand_path("spec_helper", File.dirname(__FILE__))
 
 API_KEY = '4b339169026742245b754fa338b9b0aebbd0a733'
+API_VERSION = RPXNow.api_version
 
 describe RPXNow do
   before do
-    RPXNow.api_key=nil
+    RPXNow.api_key = nil
+    RPXNow.api_version = API_VERSION
   end
 
   describe :api_key= do
@@ -12,6 +14,13 @@ describe RPXNow do
       RPXNow.api_key='XX'
       RPXNow.expects(:post).with{|x,data|data[:apiKey]=='XX'}.returns %Q({"stat":"ok"})
       RPXNow.mappings(1)
+    end
+  end
+  
+  describe :api_version= do
+    it "can be set to a api_version globally" do
+      RPXNow.api_version = 5
+      RPXNow.popup_code('x','y','z').should =~ %r(/openid/v5/signin)
     end
   end
 
@@ -32,17 +41,17 @@ describe RPXNow do
     
     it "can build an unobtrusive widget with specific version" do
       expected = %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v300/signin?token_url=http://fake.domain.com/">sign on</a>)
-      RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/', { :unobtrusive => true, :version => 300 }).should == expected
+      RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/', { :unobtrusive => true, :api_version => 300 }).should == expected
     end
     
     it "allows to specify the version of the widget" do
-      RPXNow.popup_code('x','y','z', :version => 300).should =~ %r(/openid/v300/signin)
+      RPXNow.popup_code('x','y','z', :api_version => 300).should =~ %r(/openid/v300/signin)
     end
     
     it "defaults to widget version 2" do
       RPXNow.popup_code('x','y','z').should =~ %r(/openid/v2/signin)
     end
-    
+
     it "defaults to english" do
       RPXNow.popup_code('x','y','z').should =~ /RPXNOW.language_preference = 'en'/
     end
@@ -144,7 +153,7 @@ describe RPXNow do
 
     it "can be called with a specific version" do
       RPXNow.expects(:secure_json_post).with{|a,b|a == "https://rpxnow.com/api/v300/unmap"}
-      RPXNow.unmap('http://test.myopenid.com', 1, :api_key=>'xxx', :version=>300)
+      RPXNow.unmap('http://test.myopenid.com', 1, :api_key=>'xxx', :api_version=>300)
     end
   end
 
