@@ -81,7 +81,12 @@ describe RPXNow do
     
     it "adds a :id when primaryKey was returned" do
       RPXNow.expects(:post).returns fake_response.sub(%Q("verifiedEmail"), %Q("primaryKey":"2","verifiedEmail"))
-      RPXNow.user_data('','x')[:id].should == 2
+      RPXNow.user_data('','x')[:id].should == '2'
+    end
+
+    it "handles primaryKeys that are not numeric" do
+      RPXNow.expects(:post).returns fake_response.sub(%Q("verifiedEmail"), %Q("primaryKey":"dbalatero","verifiedEmail"))
+      RPXNow.user_data('','x')[:id].should == 'dbalatero'
     end
     
     it "hands JSON response to supplied block" do

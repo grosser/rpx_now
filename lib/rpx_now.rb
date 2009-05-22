@@ -116,7 +116,7 @@ EOF
     data[:identifier] = user_data['identifier']
     data[:email] = user_data['verifiedEmail'] || user_data['email']
     data[:name] = user_data['displayName'] || user_data['preferredUsername'] || data[:email].sub(/@.*/,'')
-    data[:id] = user_data['primaryKey'].to_i unless user_data['primaryKey'].to_s.empty?
+    data[:id] = user_data['primaryKey'] unless user_data['primaryKey'].to_s.empty?
     data
   end
 
