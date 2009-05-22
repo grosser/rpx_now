@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/grosser/rpx_now}
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.1}
+  s.rubygems_version = %q{1.3.2}
   s.summary = %q{Helper to simplify RPX Now user login/creation}
 
   if s.respond_to? :specification_version then
