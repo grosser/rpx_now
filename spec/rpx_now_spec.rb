@@ -76,7 +76,7 @@ describe RPXNow do
     
     it "parses JSON response to user data" do
       RPXNow.expects(:post).returns fake_response
-      RPXNow.user_data('','x').should == {:name=>'Michael Grosser',:email=>'grosser.michael@googlemail.com',:identifier=>"https://www.google.com/accounts/o8/id?id=AItOawmaOlyYezg_WfbgP_qjaUyHjmqZD9qNIVM"}
+      RPXNow.user_data('','x').should == {:name=>'Michael Grosser',:email=>'grosser.michael@googlemail.com',:identifier=>"https://www.google.com/accounts/o8/id?id=AItOawmaOlyYezg_WfbgP_qjaUyHjmqZD9qNIVM", :username => 'grosser.michael'}
     end
     
     it "adds a :id when primaryKey was returned" do

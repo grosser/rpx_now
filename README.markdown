@@ -39,7 +39,7 @@ View
 Controller
 ----------
     # simple: use defaults
-    # user_data returns e.g. {:name=>'John Doe',:email=>'john@doe.com',:identifier=>'blug.google.com/openid/dsdfsdfs3f3'}
+    # user_data returns e.g. {:name=>'John Doe',:email=>'john@doe.com',:identifier=>'blug.google.com/openid/dsdfsdfs3f3',:username => 'john'}
     # when no user_data was found (invalid token supplied), data is empty, you may want to handle that seperatly...
     # your user model must have an identifier column
     def rpx_token
