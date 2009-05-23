@@ -39,7 +39,8 @@ View
 Controller
 ----------
     # simple: use defaults
-    # user_data returns e.g. {:name=>'John Doe',:email=>'john@doe.com',:identifier=>'blug.google.com/openid/dsdfsdfs3f3',:username => 'john'}
+    # user_data returns e.g.
+    # {:name=>'John Doe', :username => 'john', :email=>'john@doe.com', :identifier=>'blug.google.com/openid/dsdfsdfs3f3'}
     # when no user_data was found (invalid token supplied), data is empty, you may want to handle that seperatly...
     # your user model must have an identifier column
     def rpx_token
@@ -89,6 +90,7 @@ Author
 ======
 ###Contributors
  - [DBA](http://github.com/DBA)
+ - [dbalatero](http://github.com/dbalatero)
 
 [Michael Grosser](http://pragmatig.wordpress.com)  
 grosser.michael@gmail.com  
