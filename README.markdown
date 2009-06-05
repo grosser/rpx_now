@@ -13,6 +13,7 @@ Solution
 Usage
 =====
  - Get an API key @ [RPX](http://rpxnow.com)
+ - run [MIGRATION](http://github.com/grosser/rpx_now/raw/master/MIGRATION)
  - Build login view
  - Communicate with RPX API in controller to create or login User
  - for more advanced features have a look at the [RPX API Docs](https://rpxnow.com/docs)
