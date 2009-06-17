@@ -47,6 +47,12 @@ module RPXNow
     data['identifiers']
   end
 
+  def all_mappings(*args)
+    api_key, version, options = extract_key_version_and_options!(args)
+    data = secure_json_post("/api/v#{version}/all_mappings", :apiKey => api_key).merge(options)
+    data['mappings']
+  end
+
   def embed_code(subdomain,url)
 <<EOF
 <iframe src="https://#{subdomain}.#{HOST}/openid/embed?token_url=#{url}"
