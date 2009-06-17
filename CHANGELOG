@@ -1,3 +1,8 @@
+0.5.0
+----
+  * ApiError is raised when API KEY was invalid (before did only return nil)
+  * ServerError is now seperated into ApiError and ServiceUnavailableError
+
 0.4.2
 ----
   * default IDs are strings, not integers, since RPX supports both

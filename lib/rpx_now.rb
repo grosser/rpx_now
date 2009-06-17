@@ -3,7 +3,10 @@ require 'json'
 module RPXNow
   extend self
 
-  attr_writer :api_key
+  HOST = 'rpxnow.com'
+  SSL_CERT = File.join(File.dirname(__FILE__), '..', 'certs', 'ssl_cert.pem')
+
+  attr_accessor :api_key
   attr_accessor :api_version
   self.api_version = 2
 
@@ -14,9 +17,9 @@ module RPXNow
     options = {:token=>token,:apiKey=>api_key}.merge options
 
     begin
-      data = secure_json_post("https://rpxnow.com/api/v#{version}/auth_info", options)
+      data = secure_json_post("/api/v#{version}/auth_info", options)
     rescue ServerError
-      return nil if $!.to_s =~ /token/ or $!.to_s=~/Data not found/
+      return nil if $!.to_s=~/Data not found/
       raise
     end
     if block_given? then yield(data) else read_user_data_from_response(data) end
@@ -26,27 +29,27 @@ module RPXNow
   def map(identifier, primary_key, *args)
     api_key, version, options = extract_key_version_and_options!(args)
     options = {:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key}.merge options
-    secure_json_post("https://rpxnow.com/api/v#{version}/map", options)
+    secure_json_post("/api/v#{version}/map", options)
   end
 
   # un-maps an identifier to an primary-key (e.g. user.id)
   def unmap(identifier, primary_key, *args)
     api_key, version, options = extract_key_version_and_options!(args)
     options = {:identifier=>identifier,:primaryKey=>primary_key,:apiKey=>api_key}.merge options
-    secure_json_post("https://rpxnow.com/api/v#{version}/unmap", options)
+    secure_json_post("/api/v#{version}/unmap", options)
   end
 
   # returns an array of identifiers which are mapped to one of your primary-keys (e.g. user.id)
   def mappings(primary_key, *args)
     api_key, version, options = extract_key_version_and_options!(args)
     options = {:primaryKey=>primary_key,:apiKey=>api_key}.merge options
-    data = secure_json_post("https://rpxnow.com/api/v#{version}/mappings", options)
+    data = secure_json_post("/api/v#{version}/mappings", options)
     data['identifiers']
   end
 
   def embed_code(subdomain,url)
 <<EOF
-<iframe src="https://#{subdomain}.rpxnow.com/openid/embed?token_url=#{url}"
+<iframe src="https://#{subdomain}.#{HOST}/openid/embed?token_url=#{url}"
   scrolling="no" frameBorder="no" style="width:400px;height:240px;">
 </iframe>
 EOF
@@ -64,16 +67,16 @@ EOF
 
   def unobtrusive_popup_code(text, subdomain, url, options={})
     version = extract_version! options
-    "<a class=\"rpxnow\" href=\"https://#{subdomain}.rpxnow.com/openid/v#{version}/signin?token_url=#{url}\">#{text}</a>"
+    "<a class=\"rpxnow\" href=\"https://#{subdomain}.#{HOST}/openid/v#{version}/signin?token_url=#{url}\">#{text}</a>"
   end
 
   def obtrusive_popup_code(text, subdomain, url, options = {})
     version = extract_version! options
     <<EOF
-<a class="rpxnow" onclick="return false;" href="https://#{subdomain}.rpxnow.com/openid/v#{version}/signin?token_url=#{url}">
+<a class="rpxnow" onclick="return false;" href="https://#{subdomain}.#{HOST}/openid/v#{version}/signin?token_url=#{url}">
   #{text}
 </a>
-<script src="https://rpxnow.com/openid/v#{version}/widget" type="text/javascript"></script>
+<script src="https://#{HOST}/openid/v#{version}/widget" type="text/javascript"></script>
 <script type="text/javascript">
   //<![CDATA[
   RPXNOW.token_url = "#{url}";
@@ -115,51 +118,50 @@ EOF
     data = {}
     data[:identifier] = user_data['identifier']
     data[:email] = user_data['verifiedEmail'] || user_data['email']
-    data[:username] = user_data['preferredUsername'] || data[:email].sub(/@.*/,'')
+    data[:username] = user_data['preferredUsername'] || data[:email].to_s.sub(/@.*/,'')
     data[:name] = user_data['displayName'] || data[:username]
     data[:id] = user_data['primaryKey'] unless user_data['primaryKey'].to_s.empty?
     data
   end
 
-  def secure_json_post(url,data={})
-    data = JSON.parse(post(url,data))
-    raise ServerError.new(data['err']) if data['err']
-    raise ServerError.new(data.inspect) unless data['stat']=='ok'
-    data
+  def secure_json_post(path, data)
+    parse_response(post(path,data))
   end
 
-  def post(url,data)
+  def post(path, data)
     require 'net/http'
-    url = URI.parse(url)
-    http = Net::HTTP.new(url.host, url.port)
-    if url.scheme == 'https'
-      require 'net/https'
-      http.use_ssl = true
-      #TODO do we really want to verify the certificate? http://notetoself.vrensk.com/2008/09/verified-https-in-ruby/
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    end
-    resp, data = http.post(url.path, to_query(data))
-    raise "POST FAILED:"+resp.inspect unless resp.is_a? Net::HTTPOK
-    data
+    require 'net/https'
+    request = Net::HTTP::Get.new(path)
+    request.form_data = data
+    make_request(request)
   end
 
-  def to_query(data = {})
-    return data.to_query if Hash.respond_to? :to_query
-    return "" if data.empty?
-
-    #simpler to_query
-    query_data = []
-    data.each do |k, v|
-      query_data << "#{k}=#{v}"
-    end
-    
-    return query_data.join('&')
+  def make_request(request)
+    http = Net::HTTP.new(HOST, 443)
+    http.use_ssl = true
+    http.ca_file = SSL_CERT
+    http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+    http.verify_depth = 5
+    http.request(request)
   end
 
-  class ServerError < Exception
-    #to_s returns message(which is a hash...)
-    def to_s
-      super.to_s
+  def parse_response(response)
+    if response.code.to_i >= 400
+      raise ServiceUnavailableError, "The RPX service is temporarily unavailable. (4XX)"
+    else
+      result = JSON.parse(response.body)
+      return result unless result['err']
+      
+      code = result['err']['code']
+      if code == -1
+        raise ServiceUnavailableError, "The RPX service is temporarily unavailable."
+      else
+        raise ApiError, "Got error: #{result['err']['msg']} (code: #{code}), HTTP status: #{response.code}"
+      end
     end
   end
+
+  class ServerError < Exception; end #backwards compatibility / catch all
+  class ApiError < ServerError; end
+  class ServiceUnavailableError < ServerError; end
 end
