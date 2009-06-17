@@ -78,9 +78,9 @@ A identifyer can only belong to one user (in doubt the last one it was mapped to
       include RPXNow::UserIntegration
     end
 
-    user.identifiers == RPXNow.mappings(user.id)
-    user.map_identifier(identifier) == RPXNow.map(identifier, user.id)
-    user.unmap_identifier(identifier) == RPXNow.unmap(identifier, user.id)
+    user.rpx.identifiers == RPXNow.mappings(user.id)
+    user.rpx.map(identifier) == RPXNow.map(identifier, user.id)
+    user.rpx.unmap(identifier) == RPXNow.unmap(identifier, user.id)
 
 TODO
 ====

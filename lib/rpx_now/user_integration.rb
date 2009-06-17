@@ -1,15 +1,8 @@
+require 'rpx_now/user_proxy'
 module RPXNow
   module UserIntegration
-    def identifiers
-      RPXNow.mappings(id)
-    end
-
-    def map_identifier(identifier)
-      RPXNow.map(identifier, id)
-    end
-
-    def unmap_identifier(identifier)
-      RPXNow.unmap(identifier, id)
+    def rpx
+      RPXNow::UserProxy.new(id)
     end
   end
 end

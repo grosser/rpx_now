@@ -1,14 +1,6 @@
 require File.expand_path("spec_helper", File.dirname(__FILE__))
 
-API_KEY = '4b339169026742245b754fa338b9b0aebbd0a733'
-API_VERSION = RPXNow.api_version
-
 describe RPXNow do
-  before do
-    RPXNow.api_key = API_KEY
-    RPXNow.api_version = API_VERSION
-  end
-
   describe :api_key= do
     it "stores the api key, so i do not have to supply everytime" do
       RPXNow.api_key='XX'

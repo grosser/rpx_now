@@ -110,7 +110,7 @@ EOF
     elsif args.length==1
       if args[0].is_a? Hash then [@api_key,args[0]] else [args[0],{}] end
     else
-      raise unless @api_key
+      raise "NO Api Key found!" unless @api_key
       [@api_key,{}]
     end
   end

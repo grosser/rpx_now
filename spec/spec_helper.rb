@@ -5,32 +5,20 @@ require 'mocha'
 
 $LOAD_PATH << File.expand_path("../lib", File.dirname(__FILE__))
 
+# ---- setup environment/plugin
+require File.expand_path("../init", File.dirname(__FILE__))
+API_KEY = '4b339169026742245b754fa338b9b0aebbd0a733'
+API_VERSION = RPXNow.api_version
+
+
+
+
 
 # ---- rspec
 Spec::Runner.configure do |config|
   config.mock_with :mocha
-end
-
-
-# ---- bugfix
-#`exit?': undefined method `run?' for Test::Unit:Module (NoMethodError)
-#can be solved with require test/unit but this will result in extra test-output
-module Test
-  module Unit
-    def self.run?
-      true
-    end
-  end
-end
-
-
-# ---- setup environment/plugin
-require File.expand_path("../init", File.dirname(__FILE__))
-
-
-# ---- Helpers
-def pending_it(text,&block)
-  it text do
-    pending(&block)
+  config.before :each do
+    RPXNow.api_key = API_KEY
+    RPXNow.api_version = API_VERSION
   end
 end
