@@ -67,15 +67,16 @@ users can login to the same account with multiple identifiers.
     RPXNow.map(identifier, primary_key) #add a mapping
     RPXNow.unmap(identifier, primary_key) #remove a mapping
     RPXNow.mappings(primary_key) # [identifier1,identifier2,...]
+    RPXNow.all_mappings # [["1",['google.com/dsdas','yahoo.com/asdas']], ["2",[...]], ... ]
 
 After a primary key is mapped to an identifier, when a user logs in with this identifier,  
-`RPXNow.user_data` will contain his `primaryKey` as `:id`.
+`RPXNow.user_data` will contain his `primaryKey` as `:id`.  
+A identifyer can only belong to one user (in doubt the last one it was mapped to)
 
 TODO
 ====
  - add provider?
  - add get_contacts (premium rpx service)
- - add all_mappings
 
 
 Author
