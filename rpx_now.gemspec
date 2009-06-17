@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rpx_now}
-  s.version = "0.5.2"
+  s.version = "0.5.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
@@ -17,6 +17,8 @@ Gem::Specification.new do |s|
     "VERSION.yml",
     "lib/rpx_now.rb",
     "lib/rpx_now/user_integration.rb",
+    "lib/rpx_now/user_proxy.rb",
+    "spec/rpx_now/user_proxy_spec.rb",
     "spec/rpx_now_spec.rb",
     "spec/spec_helper.rb"
   ]
@@ -28,6 +30,7 @@ Gem::Specification.new do |s|
   s.summary = %q{Helper to simplify RPX Now user login/creation}
   s.test_files = [
     "spec/rpx_now_spec.rb",
+    "spec/rpx_now/user_proxy_spec.rb",
     "spec/spec_helper.rb"
   ]
 
