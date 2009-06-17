@@ -73,6 +73,15 @@ After a primary key is mapped to an identifier, when a user logs in with this id
 `RPXNow.user_data` will contain his `primaryKey` as `:id`.  
 A identifyer can only belong to one user (in doubt the last one it was mapped to)
 
+###User integration (e.g. ActiveRecord)
+    class User < ActiveRecord::Base
+      include RPXNow::UserIntegration
+    end
+
+    user.identifiers == RPXNow.mappings(user.id)
+    user.map_identifier(identifier) == RPXNow.map(identifier, user.id)
+    user.unmap_identifier(identifier) == RPXNow.unmap(identifier, user.id)
+
 TODO
 ====
  - add provider?
