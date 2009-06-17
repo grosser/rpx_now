@@ -10,6 +10,9 @@ Solution
  - Use [RPX](http://rpxnow.com) for universal and usable user login
  - Use view/controller helpers for easy integration
 
+![Single Interface for all providers](https://rpxnow.com/images/how_diagram.png)
+![Visitors choose from providers they already have](https://rpxnow.com/images/6providers.png?2)
+
 Usage
 =====
  - Get an API key @ [RPX](http://rpxnow.com)

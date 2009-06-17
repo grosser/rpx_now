@@ -127,12 +127,12 @@ describe RPXNow do
     
     it "raises when there is a communication error" do
       RPXNow.expects(:post).returns %Q({"err":"wtf","stat":"ok"})
-      lambda{RPXNow.send(:secure_json_post,'xx')}.should raise_error RPXNow::ServerError
+      lambda{RPXNow.send(:secure_json_post,'xx')}.should raise_error(RPXNow::ServerError)
     end
     
     it "raises when status is not ok" do
       RPXNow.expects(:post).returns %Q({"stat":"err"})
-      lambda{RPXNow.send(:secure_json_post,'xx')}.should raise_error RPXNow::ServerError
+      lambda{RPXNow.send(:secure_json_post,'xx')}.should raise_error(RPXNow::ServerError)
     end
   end
 
