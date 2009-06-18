@@ -1,5 +1,4 @@
 require File.expand_path("../spec_helper", File.dirname(__FILE__))
-require 'rpx_now/user_integration'
 
 class User
   include RPXNow::UserIntegration

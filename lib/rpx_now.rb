@@ -1,4 +1,7 @@
 require 'json'
+require 'rpx_now/contacts_collection'
+require 'rpx_now/user_integration'
+require 'rpx_now/user_proxy'
 
 module RPXNow
   extend self
@@ -49,9 +52,17 @@ module RPXNow
 
   def all_mappings(*args)
     api_key, version, options = extract_key_version_and_options!(args)
-    data = secure_json_post("/api/v#{version}/all_mappings", :apiKey => api_key).merge(options)
+    data = secure_json_post("/api/v#{version}/all_mappings", {:apiKey => api_key}.merge(options))
     data['mappings']
   end
+
+  def contacts(identifier, *args)
+    api_key, version, options = extract_key_version_and_options!(args)
+    options = {:apiKey => api_key, :identifier=> identifier}.merge(options)
+    data = secure_json_post("/api/v#{version}/get_contacts", options)
+    RPXNow::ContactsCollection.new(data['response'])
+  end
+  alias get_contacts contacts
 
   def embed_code(subdomain,url)
 <<EOF

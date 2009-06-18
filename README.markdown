@@ -37,10 +37,16 @@ View
 
 `popup_code` can also be called with `:unobstrusive=>true`
 
-Controller
-----------
+Environment
+-----------
+    Rails::Initializer.run do |config|
+      config.gem "grosser-rpx_now", :lib => "rpx_now", :source => "http://gems.github.com/"
+      ...
+    end
     RPXNow.api_key = "YOU RPX API KEY"
 
+Controller
+----------
     # user_data
     # found: {:name=>'John Doe', :username => 'john', :email=>'john@doe.com', :identifier=>'blug.google.com/openid/dsdfsdfs3f3'}
     # not found: nil (can happen with e.g. invalid tokens)
@@ -81,6 +87,10 @@ A identifyer can only belong to one user (in doubt the last one it was mapped to
     user.rpx.identifiers == RPXNow.mappings(user.id)
     user.rpx.map(identifier) == RPXNow.map(identifier, user.id)
     user.rpx.unmap(identifier) == RPXNow.unmap(identifier, user.id)
+
+###Contacts
+Retrieve all contacts for a given user:
+    RPXNow.contacts(identifier).each {|c| puts "#{c['displayName']}: #{c['emails']}}
 
 TODO
 ====

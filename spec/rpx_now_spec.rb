@@ -138,6 +138,14 @@ describe RPXNow do
     end
   end
 
+  describe :contacts do
+    it "finds all contacts" do
+      response = JSON.parse(File.read('spec/fixtures/get_contacts_response.json'))
+      RPXNow.expects(:secure_json_post).with('/api/v2/get_contacts',:identifier=>'xx', :apiKey=>API_KEY).returns response
+      RPXNow.contacts('xx').size.should == 5
+    end
+  end
+
   describe :parse_response do
     it "parses json when status is ok" do
       response = mock(:code=>'200', :body=>%Q({"stat":"ok","data":"xx"}))

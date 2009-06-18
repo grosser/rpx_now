@@ -1,4 +1,3 @@
-require 'rpx_now/user_proxy'
 module RPXNow
   module UserIntegration
     def rpx

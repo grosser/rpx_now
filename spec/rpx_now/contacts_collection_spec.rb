@@ -1,5 +1,4 @@
 require File.expand_path("../spec_helper", File.dirname(__FILE__))
-require 'rpx_now/contacts_collection'
 
 describe RPXNow::ContactsCollection do
   before do
@@ -23,5 +22,11 @@ describe RPXNow::ContactsCollection do
 
   it "parses emails to list with multiple emails" do
     @collection[2]['emails'].should == ["fred.williams@example.com","fred@example.com"]
+  end
+
+  it "holds additional_info" do
+    @collection.additional_info['startIndex'].should == 1
+    @collection.additional_info['itemsPerPage'].should == 5
+    @collection.additional_info['totalResults'].should == 5
   end
 end
