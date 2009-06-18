@@ -1,0 +1,58 @@
+{
+  "response": {
+    "itemsPerPage": 5,
+    "totalResults": 5,
+    "entry": [
+      {
+        "displayName": "Bob Johnson",
+        "emails": [
+          {
+            "type": "other",
+            "value": "bob@example.com"
+          }
+        ]
+      },
+      {
+        "displayName": "Cindy Smith",
+        "emails": [
+          {
+            "type": "other",
+            "value": "cindy.smith@example.com"
+          }
+        ]
+      },
+      {
+        "displayName": "Fred Williams",
+        "emails": [
+          {
+            "type": "other",
+            "value": "fred.williams@example.com"
+          },
+          {
+            "type": "other",
+            "value": "fred@example.com"
+          }
+        ]
+      },
+      {
+        "emails": [
+          {
+            "type": "other",
+            "value": "j.lewis@example.com"
+          }
+        ]
+      },
+      {
+        "displayName": "Mary Jones",
+        "emails": [
+          {
+            "type": "other",
+            "value": "mary.jones@example.com"
+          }
+        ]
+      }
+    ],
+    "startIndex": 1
+  },
+  "stat": "ok"
+}
