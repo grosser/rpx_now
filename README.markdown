@@ -88,15 +88,13 @@ A identifyer can only belong to one user (in doubt the last one it was mapped to
     user.rpx.map(identifier) == RPXNow.map(identifier, user.id)
     user.rpx.unmap(identifier) == RPXNow.unmap(identifier, user.id)
 
-###Contacts
+###Contacts (PRX Pro)
 Retrieve all contacts for a given user:
     RPXNow.contacts(identifier).each {|c| puts "#{c['displayName']}: #{c['emails']}}
 
 TODO
 ====
- - add provider?
- - add get_contacts (premium rpx service)
-
+ - add provider / credentials helpers ?
 
 Author
 ======
