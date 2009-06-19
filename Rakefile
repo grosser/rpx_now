@@ -12,11 +12,11 @@ end
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    porject_name = 'rpx_now'
-    gem.name = porject_name
+    project_name = 'rpx_now'
+    gem.name = project_name
     gem.summary = "Helper to simplify RPX Now user login/creation"
     gem.email = "grosser.michael@gmail.com"
-    gem.homepage = "http://github.com/grosser/#{porject_name}"
+    gem.homepage = "http://github.com/grosser/#{project_name}"
     gem.authors = ["Michael Grosser"]
     gem.add_dependency ['activesupport']
   end
