@@ -149,7 +149,7 @@ EOF
     require 'net/http'
     require 'net/https'
     request = Net::HTTP::Get.new(path)
-    request.form_data = data
+    request.form_data = data.map{|k,v| [k.to_s,v]}#symbol keys -> string because of ruby 1.9.x bug http://redmine.ruby-lang.org/issues/show/1351
     make_request(request)
   end
 
