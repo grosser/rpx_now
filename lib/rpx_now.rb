@@ -64,10 +64,10 @@ module RPXNow
   end
   alias get_contacts contacts
 
-  def embed_code(subdomain,url)
+  def embed_code(subdomain,url,width=400,height=240)
 <<EOF
 <iframe src="https://#{subdomain}.#{HOST}/openid/embed?token_url=#{url}"
-  scrolling="no" frameBorder="no" style="width:400px;height:240px;">
+  scrolling="no" frameBorder="no" style="width:#{width}px;height:#{height}px;">
 </iframe>
 EOF
   end
