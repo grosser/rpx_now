@@ -45,7 +45,7 @@ describe RPXNow do
       RPXNow.embed_code('xxx', 'my_url').should =~ /height:240px;/
     end
     
-    it "has a changeable width" do
+    it "has a changeable height" do
       RPXNow.embed_code('xxx', 'my_url', :height => '500').should =~ /height:500px;/
     end
   end
