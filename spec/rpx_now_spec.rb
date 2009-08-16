@@ -26,11 +26,27 @@ describe RPXNow do
     end
     
     it "defaults to English" do
-      RPXNow.embed_code('xxx', 'my_url').should =~ /token_url=my_url&language_preference=en/
+      RPXNow.embed_code('xxx', 'my_url').should =~ /language_preference=en/
     end
     
     it "has a changeable language" do
-      RPXNow.embed_code('xxx', 'my_url', :language => 'es').should =~ /token_url=my_url&language_preference=es/
+      RPXNow.embed_code('xxx', 'my_url', :language => 'es').should =~ /language_preference=es/
+    end
+    
+    it "defaults to 400px width" do
+      RPXNow.embed_code('xxx', 'my_url').should =~ /width:400px;/
+    end
+    
+    it "has a changeable width" do
+      RPXNow.embed_code('xxx', 'my_url', :width => '300').should =~ /width:300px;/
+    end
+    
+    it "defaults to 240px height" do
+      RPXNow.embed_code('xxx', 'my_url').should =~ /height:240px;/
+    end
+    
+    it "has a changeable width" do
+      RPXNow.embed_code('xxx', 'my_url', :height => '500').should =~ /height:500px;/
     end
   end
 
