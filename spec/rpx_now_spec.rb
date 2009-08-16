@@ -24,6 +24,14 @@ describe RPXNow do
     it "contains the url" do
       RPXNow.embed_code('xxx','my_url').should =~ /token_url=my_url/
     end
+    
+    it "defaults to English" do
+      RPXNow.embed_code('xxx', 'my_url').should =~ /token_url=my_url&language_preference=en/
+    end
+    
+    it "has a changeable language" do
+      RPXNow.embed_code('xxx', 'my_url', :language => 'es').should =~ /token_url=my_url&language_preference=es/
+    end
   end
 
   describe :popup_code do
