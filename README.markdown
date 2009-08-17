@@ -99,6 +99,7 @@ TODO
 Author
 ======
 ###Contributors
+ - [Amunds](http://github.com/Amunds)
  - [DBA](http://github.com/DBA)
  - [dbalatero](http://github.com/dbalatero)
 
