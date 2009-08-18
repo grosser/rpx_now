@@ -28,6 +28,19 @@ module RPXNow
     if block_given? then yield(data) else read_user_data_from_response(data) end
   end
 
+  # set the users status
+  def set_status(identifier, status, *args)
+    api_key, version, options = extract_key_version_and_options!(args)
+    options = {:identifier => identifier, :status => status, :apiKey => api_key}.merge options
+
+    begin
+      data = secure_json_post("/api/v#{version}/set_status", options)
+    rescue ServerError
+      return nil if $!.to_s=~/Data not found/
+      raise
+    end
+  end
+
   # maps an identifier to an primary-key (e.g. user.id)
   def map(identifier, primary_key, *args)
     api_key, version, options = extract_key_version_and_options!(args)
