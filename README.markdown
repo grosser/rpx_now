@@ -92,6 +92,10 @@ A identifyer can only belong to one user (in doubt the last one it was mapped to
 Retrieve all contacts for a given user:
     RPXNow.contacts(identifier).each {|c| puts "#{c['displayName']}: #{c['emails']}}
 
+###Status updates (PRX Pro)
+Send a status update to provider (a tweet/facebook-status/...) :
+    RPXNow.set_status(identifier, "I just registered at yourdomain.com ...")
+
 TODO
 ====
  - add provider / credentials helpers ?
@@ -102,6 +106,7 @@ Author
  - [Amunds](http://github.com/Amunds)
  - [DBA](http://github.com/DBA)
  - [dbalatero](http://github.com/dbalatero)
+ - [jackdempsey](http://jackndempsey.blogspot.com/)
 
 [Michael Grosser](http://pragmatig.wordpress.com)  
 grosser.michael@gmail.com  
