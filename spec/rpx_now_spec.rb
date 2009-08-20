@@ -152,6 +152,21 @@ describe RPXNow do
     end
   end
 
+  describe :set_status do
+    before do
+      @response_body = %Q({ "stat": "ok" })
+    end
+
+    def fake_response
+      mock(:code=>"200",:body=>@response_body)
+    end
+
+    it "parses JSON response to result hash" do
+      RPXNow.expects(:post).returns fake_response
+      RPXNow.set_status('identifier', 'Chillen...').should == {'stat' => 'ok'}
+    end
+  end
+
   describe :read_user_data_from_response do
     it "reads secondary names" do
       RPXNow.send(:read_user_data_from_response,{'profile'=>{'preferredUsername'=>'1'}})[:name].should == '1'
