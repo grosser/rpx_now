@@ -1,3 +1,7 @@
+0.5.9
+-----
+  * Switched from Get to Post requests
+
 0.5.0
 ----
   * ApiError is raised when API KEY was invalid (before did only return nil)
