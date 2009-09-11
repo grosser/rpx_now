@@ -192,7 +192,7 @@ EOF
     end
   end
 
-  class ServerError < Exception; end #backwards compatibility / catch all
+  class ServerError < RuntimeError; end #backwards compatibility / catch all
   class ApiError < ServerError; end
   class ServiceUnavailableError < ServerError; end
 end
