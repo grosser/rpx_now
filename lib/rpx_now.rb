@@ -1,4 +1,7 @@
+require 'net/http'
+require 'net/https'
 require 'json'
+
 require 'rpx_now/contacts_collection'
 require 'rpx_now/user_integration'
 require 'rpx_now/user_proxy'
@@ -160,8 +163,6 @@ EOF
   end
 
   def post(path, data)
-    require 'net/http'
-    require 'net/https'
     request = Net::HTTP::Post.new(path)
     request.form_data = data.map{|k,v| [k.to_s,v]}#symbol keys -> string because of ruby 1.9.x bug http://redmine.ruby-lang.org/issues/show/1351
     make_request(request)
