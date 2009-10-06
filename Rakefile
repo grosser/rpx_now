@@ -8,11 +8,11 @@ task :default do |t|
   system("spec #{options} #{files}")
 end
 
-#Gemspec
 begin
   require 'jeweler'
+  project_name = 'rpx_now'
+
   Jeweler::Tasks.new do |gem|
-    project_name = 'rpx_now'
     gem.name = project_name
     gem.summary = "Helper to simplify RPX Now user login/creation"
     gem.email = "grosser.michael@gmail.com"
@@ -20,9 +20,16 @@ begin
     gem.authors = ["Michael Grosser"]
     gem.add_dependency ['activesupport']
     gem.files = ['**/*']
+    gem.rubyforge_project = 'rpx-now'
   end
+
+  # fake task so that rubyforge:release works
+  task :rdoc do
+    `mkdir rdoc`
+    `echo documentation is at http://github.com/grosser/#{project_name} > rdoc/README.rdoc`
+  end
+
+  Jeweler::RubyforgeTasks.new
 rescue LoadError
   puts "Jeweler, or one of its dependencies, is not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
-
-task :update_gemspec => [:manifest, :build_gemspec]

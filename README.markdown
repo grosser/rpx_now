@@ -23,7 +23,7 @@ Usage
 Install
 =======
  - As Rails plugin: `script/plugin install git://github.com/grosser/rpx_now.git `
- - As gem: `sudo gem install grosser-rpx_now --source http://gems.github.com/`
+ - As gem: `sudo gem install rpx_now`
 
 Examples
 ========
