@@ -109,7 +109,8 @@ Author
  - [Amunds](http://github.com/Amunds)
  - [DBA](http://github.com/DBA)
  - [dbalatero](http://github.com/dbalatero)
- - [jackdempsey](http://jackndempsey.blogspot.com/)
+ - [jackdempsey](http://jackndempsey.blogspot.com)
+ - [Patrick Reagan (reagent)](http://sneaq.net)
 
 [Michael Grosser](http://pragmatig.wordpress.com)  
 grosser.michael@gmail.com  
