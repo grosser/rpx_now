@@ -1,4 +1,5 @@
 module RPXNow
+  # Makes returned contacts feel like a array
   class ContactsCollection < Array
     def initialize(list)
       @raw = list

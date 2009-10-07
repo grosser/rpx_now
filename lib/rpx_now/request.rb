@@ -3,8 +3,11 @@ module RPXNow
     HOST = 'rpxnow.com'
     SSL_CERT = File.join(File.dirname(__FILE__), '..', '..', 'certs', 'ssl_cert.pem')
 
-    def self.post(path, data)
-      parse_response(request(path,data))
+    def self.post(method, data)
+      version = RPXNow.extract_version! data
+      path = "/api/v#{version}/#{method}"
+      response = request(path, {:apiKey => RPXNow.api_key}.merge(data))
+      parse_response(response)
     end
 
     private
