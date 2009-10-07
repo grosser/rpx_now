@@ -1,4 +1,4 @@
-require File.expand_path("../spec_helper", File.dirname(__FILE__))
+require 'spec/spec_helper'
 
 describe RPXNow::ContactsCollection do
   before do

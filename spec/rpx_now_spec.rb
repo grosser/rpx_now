@@ -1,10 +1,10 @@
-require File.expand_path("spec_helper", File.dirname(__FILE__))
+require 'spec/spec_helper'
 
 describe RPXNow do
   describe :api_key= do
     it "stores the api key, so i do not have to supply everytime" do
       RPXNow.api_key='XX'
-      RPXNow.should_receive(:post).with{|x,data|data[:apiKey]=='XX'}.and_return mock(:code=>'200', :body=>%Q({"stat":"ok"}))
+      RPXNow::Request.should_receive(:request).with{|x,data|data[:apiKey]=='XX'}.and_return mock(:code=>'200', :body=>%Q({"stat":"ok"}))
       RPXNow.mappings(1)
     end
   end
@@ -104,36 +104,36 @@ describe RPXNow do
         :identifier => 'https://www.google.com/accounts/o8/id?id=AItOawmaOlyYezg_WfbgP_qjaUyHjmqZD9qNIVM',
         :username   => 'grosser.michael',
       }
-      RPXNow.should_receive(:post).and_return fake_response
+      RPXNow::Request.should_receive(:request).and_return fake_response
       RPXNow.user_data('').should == expected
     end
     
     it "adds a :id when primaryKey was returned" do
       @response_body.sub!(%Q("verifiedEmail"), %Q("primaryKey":"2","verifiedEmail"))
-      RPXNow.should_receive(:post).and_return fake_response
+      RPXNow::Request.should_receive(:request).and_return fake_response
       RPXNow.user_data('')[:id].should == '2'
     end
 
     it "handles primaryKeys that are not numeric" do
       @response_body.sub!(%Q("verifiedEmail"), %Q("primaryKey":"dbalatero","verifiedEmail"))
-      RPXNow.should_receive(:post).and_return fake_response
+      RPXNow::Request.should_receive(:request).and_return fake_response
       RPXNow.user_data('')[:id].should == 'dbalatero'
     end
     
     it "hands JSON response to supplied block" do
-      RPXNow.should_receive(:post).and_return mock(:code=>'200',:body=>%Q({"x":"1","stat":"ok"}))
+      RPXNow::Request.should_receive(:request).and_return mock(:code=>'200',:body=>%Q({"x":"1","stat":"ok"}))
       response = nil
       RPXNow.user_data(''){|data| response = data}
       response.should == {"x" => "1", "stat" => "ok"}
     end
     
     it "returns what the supplied block returned" do
-      RPXNow.should_receive(:post).and_return mock(:code=>'200',:body=>%Q({"x":"1","stat":"ok"}))
+      RPXNow::Request.should_receive(:request).and_return mock(:code=>'200',:body=>%Q({"x":"1","stat":"ok"}))
       RPXNow.user_data(''){|data| "x"}.should == 'x'
     end
     
     it "can send additional parameters" do
-      RPXNow.should_receive(:post).with{|url,data|
+      RPXNow::Request.should_receive(:request).with{|url,data|
         data[:extended].should == 'true'
       }.and_return fake_response
       RPXNow.user_data('',:extended=>'true')
@@ -168,18 +168,18 @@ describe RPXNow do
     end
 
     it "parses JSON response to result hash" do
-      RPXNow.should_receive(:post).and_return fake_response
+      RPXNow::Request.should_receive(:request).and_return fake_response
       RPXNow.set_status('identifier', 'Chillen...').should == {'stat' => 'ok'}
     end
   end
 
   describe :read_user_data_from_response do
     it "reads secondary names" do
-      RPXNow.send(:read_user_data_from_response,{'profile'=>{'preferredUsername'=>'1'}})[:name].should == '1'
+      RPXNow.send(:parse_user_data,{'profile'=>{'preferredUsername'=>'1'}})[:name].should == '1'
     end
     
     it "parses email when no name is found" do
-      RPXNow.send(:read_user_data_from_response,{'profile'=>{'email'=>'1@xxx.com'}})[:name].should == '1'
+      RPXNow.send(:parse_user_data,{'profile'=>{'email'=>'1@xxx.com'}})[:name].should == '1'
     end
   end
 
@@ -191,51 +191,23 @@ describe RPXNow do
     end
   end
 
-  describe :parse_response do
-    it "parses json when status is ok" do
-      response = mock(:code=>'200', :body=>%Q({"stat":"ok","data":"xx"}))
-      RPXNow.send(:parse_response, response)['data'].should == "xx"
-    end
-
-    it "raises when there is a communication error" do
-      response = stub(:code=>'200', :body=>%Q({"err":"wtf","stat":"ok"}))
-      lambda{
-        RPXNow.send(:parse_response,response)
-      }.should raise_error(RPXNow::ApiError)
-    end
-
-    it "raises when service has downtime" do
-      response = stub(:code=>'200', :body=>%Q({"err":{"code":-1},"stat":"ok"}))
-      lambda{
-        RPXNow.send(:parse_response,response)
-      }.should raise_error(RPXNow::ServiceUnavailableError)
-    end
-
-    it "raises when service is down" do
-      response = stub(:code=>'400',:body=>%Q({"stat":"err"}))
-      lambda{
-        RPXNow.send(:parse_response,response)
-      }.should raise_error(RPXNow::ServiceUnavailableError)
-    end
-  end
-
   describe :mappings do
     it "parses JSON response to unmap data" do
-      RPXNow.should_receive(:post).and_return mock(:code=>'200',:body=>%Q({"stat":"ok", "identifiers": ["http://test.myopenid.com/"]}))
+      RPXNow::Request.should_receive(:request).and_return mock(:code=>'200',:body=>%Q({"stat":"ok", "identifiers": ["http://test.myopenid.com/"]}))
       RPXNow.mappings(1, "x").should == ["http://test.myopenid.com/"]
     end
   end
 
   describe :map do
     it "adds a mapping" do
-      RPXNow.should_receive(:post).and_return mock(:code=>'200',:body=>%Q({"stat":"ok"}))
+      RPXNow::Request.should_receive(:request).and_return mock(:code=>'200',:body=>%Q({"stat":"ok"}))
       RPXNow.map('http://test.myopenid.com',1, API_KEY)
     end
   end
 
   describe :unmap do
     it "unmaps a indentifier" do
-      RPXNow.should_receive(:post).and_return mock(:code=>'200',:body=>%Q({"stat":"ok"}))
+      RPXNow::Request.should_receive(:request).and_return mock(:code=>'200',:body=>%Q({"stat":"ok"}))
       RPXNow.unmap('http://test.myopenid.com', 1, "x")
     end
 
