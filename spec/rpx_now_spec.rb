@@ -157,6 +157,12 @@ describe RPXNow do
       RPXNow.user_data('id', :extended=>'abc', :api_version=>123)
       RPXNow.api_version.should == API_VERSION
     end
+
+    it "works with apiKey as option" do
+      RPXNow::Request.should_receive(:request).with('/api/v2/auth_info', :apiKey=>'THE KEY', :token=>'id', :extended=>'abc').and_return @response
+      RPXNow.user_data('id', :extended=>'abc', :apiKey=>'THE KEY')
+      RPXNow.api_key.should == API_KEY
+    end
   end
 
   describe :set_status do
