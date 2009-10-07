@@ -40,10 +40,13 @@ View
 Environment
 -----------
     Rails::Initializer.run do |config|
-      config.gem "grosser-rpx_now", :lib => "rpx_now", :source => "http://gems.github.com/"
+      config.gem "rpx_now"
       ...
+
+      config.after_initialize do # so rake gems:install works
+        RPXNow.api_key = "YOU RPX API KEY"
+      end
     end
-    RPXNow.api_key = "YOU RPX API KEY"
 
 Controller
 ----------

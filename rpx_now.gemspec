@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
      "lib/rpx_now/user_integration.rb",
      "lib/rpx_now/user_proxy.rb",
      "pkg/rpx_now-0.5.10.gem",
+     "pkg/rpx_now-0.5.11.gem",
      "rdoc/README.rdoc",
      "rpx_now.gemspec",
      "spec/fixtures/get_contacts_response.json",
