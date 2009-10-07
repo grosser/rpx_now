@@ -1,7 +1,7 @@
 module RPXNow
   class Request
     HOST = 'rpxnow.com'
-    SSL_CERT = File.join(File.dirname(__FILE__), '..', '..', 'certs', 'ssl_cert.pem')
+    SSL_CERT = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'certs', 'ssl_cert.pem'))
 
     def self.post(path, data)
       parse_response(request(path,data))

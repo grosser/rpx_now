@@ -1,6 +1,16 @@
 require 'spec/spec_helper'
 
 describe RPXNow::Request do
+  describe 'ssl cert' do
+    it "has an absolute path" do
+      RPXNow::Request::SSL_CERT[0..0].should == '/' #start with '/'
+    end
+
+    it "exists" do
+      File.read(RPXNow::Request::SSL_CERT).to_s.should_not be_empty
+    end
+  end
+
   describe :parse_response do
     it "parses json when status is ok" do
       response = mock(:code=>'200', :body=>%Q({"stat":"ok","data":"xx"}))
