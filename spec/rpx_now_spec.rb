@@ -253,4 +253,8 @@ describe RPXNow do
       RPXNow.all_mappings.sort.should == [["1", ["http://test.myopenid.com"]], ["2", ["http://test-2.myopenid.com"]]]
     end
   end
+
+  it "has a VERSION" do
+    RPXNow::VERSION.should =~ /^\d+\.\d+\.\d+$/
+  end
 end

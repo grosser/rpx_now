@@ -14,6 +14,8 @@ module RPXNow
   attr_accessor :api_version
   self.api_version = 2
 
+  VERSION = File.read( File.join(File.dirname(__FILE__),'..','VERSION') ).strip
+
   # retrieve the users data
   # - cleaned Hash
   # - complete/unclean response when block was given user_data{|response| ...; return hash }
