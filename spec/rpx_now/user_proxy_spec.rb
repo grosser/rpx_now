@@ -9,23 +9,25 @@ class User
 end
 
 describe RPXNow::UserProxy do
-  before do
-    RPXNow.unmap('http://test.myopenid.com', 5)
+  before { @user = User.new }
+
+  it "should create a proxy" do
+    RPXNow::UserProxy.expects(:new).with(@user.id).returns('proxy')
+    @user.rpx.should == 'proxy'
   end
 
   it "has identifiers" do
-    RPXNow.map('http://test.myopenid.com', 5)
-    User.new.rpx.identifiers.should == ['http://test.myopenid.com']
+    RPXNow.expects(:mappings).with(@user.id).returns('identifiers')
+    @user.rpx.identifiers.should == 'identifiers'
   end
 
   it "can map" do
-    User.new.rpx.map('http://test.myopenid.com')
-    User.new.rpx.identifiers.should == ['http://test.myopenid.com']
+    RPXNow.expects(:map).with('identifier', @user.id).returns('new_mapping')
+    @user.rpx.map('identifier').should == 'new_mapping'
   end
 
   it "can unmap" do
-    RPXNow.map('http://test.myopenid.com', 5)
-    User.new.rpx.unmap('http://test.myopenid.com')
-    User.new.rpx.identifiers.should == []
+    RPXNow.expects(:unmap).with('identifier', @user.id)
+    @user.rpx.unmap('identifier')
   end
 end
