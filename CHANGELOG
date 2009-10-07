@@ -1,3 +1,7 @@
+0.6.0
+-----
+ * removed optional api key as parameter: RPXNow.user_data(token, api_key, options) --> RPXNow.user_data(token, options), you may use :apiKey=>... instead
+
 0.5.9
 -----
   * Switched from Get to Post requests
