@@ -15,7 +15,8 @@ module RPXNow
   self.api_version = 2
 
   # retrieve the users data
-  # - Hash
+  # - cleaned Hash
+  # - complete/unclean response when block was given user_data{|response| ...; return hash }
   # - nil when token was invalid / data was not found
   def user_data(token, *args)
     api_key, version, options = extract_key_version_and_options!(args)
