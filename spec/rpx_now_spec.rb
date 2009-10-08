@@ -7,17 +7,63 @@ describe RPXNow do
   end
 
   describe :api_key= do
-    it "stores the api key, so i do not have to supply everytime" do
+    before do
       RPXNow.api_key='XX'
-      RPXNow::Request.should_receive(:request).with{|x,data|data[:apiKey]=='XX'}.and_return fake_response
+    end
+
+    it "is stored" do
+      RPXNow.api_key.should == 'XX'
+    end
+
+    it "stores the api key, so i do not have to supply everytime" do
+      RPXNow::Request.should_receive(:request).
+        with(anything, hash_including(:apiKey => 'XX')).
+        and_return fake_response
       RPXNow.mappings(1)
+    end
+
+    it "is not overwritten when overwriting for a single request" do
+      RPXNow::Request.should_receive(:request).
+        with(anything, hash_including(:apiKey => 'YY')).
+        and_return fake_response
+      RPXNow.mappings(1, :apiKey => 'YY')
+      RPXNow.api_key.should == 'XX'
     end
   end
   
   describe :api_version= do
-    it "can be set to a api_version globally" do
-      RPXNow.api_version = 5
-      RPXNow.popup_code('x','y','z').should =~ %r(/openid/v5/signin)
+    it "is 2 by default" do
+      RPXNow.api_version.should == 2
+    end
+
+    it "is stored" do
+      RPXNow.api_version='XX'
+      RPXNow.api_version.should == 'XX'
+    end
+
+    it "used for every request" do
+      RPXNow.api_version='XX'
+      RPXNow::Request.should_receive(:request).
+        with('/api/vXX/mappings', anything).
+        and_return fake_response
+      RPXNow.mappings(1)
+    end
+
+    it "is not overwritten when overwriting for a single request" do
+      RPXNow.api_version='XX'
+      RPXNow::Request.should_receive(:request).
+        with('/api/vYY/mappings', anything).
+        and_return fake_response
+      RPXNow.mappings(1, :api_version => 'YY')
+      RPXNow.api_version.should == 'XX'
+    end
+
+    it "is not passed in data for request" do
+      RPXNow.api_version='XX'
+      RPXNow::Request.should_receive(:request).
+        with(anything, hash_not_including(:api_version => 'YY')).
+        and_return fake_response
+      RPXNow.mappings(1, :api_version => 'YY')
     end
   end
 
@@ -148,14 +194,16 @@ describe RPXNow do
     
     it "can send additional parameters" do
       RPXNow::Request.should_receive(:request).
-        with{|url,data| data[:extended].should == 'true'}.
+        with(anything, hash_including(:extended => 'true')).
         and_return @response
       RPXNow.user_data('',:extended=>'true')
     end
 
+    # these 2 tests are kind of duplicates of the api_version/key tests,
+    # but i want to be extra-sure user_data works
     it "works with api version as option" do
       RPXNow::Request.should_receive(:request).
-        with('/api/v123/auth_info', :apiKey=>API_KEY, :token=>'id', :extended=>'abc').
+        with('/api/v123/auth_info', anything).
         and_return @response
       RPXNow.user_data('id', :extended=>'abc', :api_version=>123)
       RPXNow.api_version.should == API_VERSION
@@ -163,7 +211,7 @@ describe RPXNow do
 
     it "works with apiKey as option" do
       RPXNow::Request.should_receive(:request).
-        with('/api/v2/auth_info', :apiKey=>'THE KEY', :token=>'id', :extended=>'abc').
+        with('/api/v2/auth_info', hash_including(:apiKey=>'THE KEY')).
         and_return @response
       RPXNow.user_data('id', :extended=>'abc', :apiKey=>'THE KEY')
       RPXNow.api_key.should == API_KEY
@@ -171,9 +219,11 @@ describe RPXNow do
   end
 
   describe :set_status do
-    it "parses JSON response to result hash" do
-      RPXNow::Request.should_receive(:request).and_return fake_response
-      RPXNow.set_status('identifier', 'Chillen...').should == {'stat' => 'ok'}
+    it "sets the status" do
+      RPXNow::Request.should_receive(:request).
+        with("/api/v2/set_status", :identifier=>"identifier", :status=>"Chillen...", :apiKey=>API_KEY).
+        and_return fake_response
+      RPXNow.set_status('identifier', 'Chillen...')
     end
   end
 
