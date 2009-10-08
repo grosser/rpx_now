@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rpx_now}
-  s.version = "0.6.1"
+  s.version = "0.6.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
-  s.date = %q{2009-10-07}
+  s.date = %q{2009-10-08}
   s.email = %q{grosser.michael@gmail.com}
   s.extra_rdoc_files = [
     "README.markdown"
@@ -23,17 +23,19 @@ Gem::Specification.new do |s|
      "certs/ssl_cert.pem",
      "init.rb",
      "lib/rpx_now.rb",
+     "lib/rpx_now/api.rb",
      "lib/rpx_now/contacts_collection.rb",
-     "lib/rpx_now/request.rb",
      "lib/rpx_now/user_integration.rb",
      "lib/rpx_now/user_proxy.rb",
      "pkg/rpx_now-0.5.10.gem",
      "pkg/rpx_now-0.5.11.gem",
+     "pkg/rpx_now-0.6.1.gem",
      "rdoc/README.rdoc",
      "rpx_now.gemspec",
      "spec/fixtures/get_contacts_response.json",
+     "spec/integration/mapping_spec.rb",
+     "spec/rpx_now/api_spec.rb",
      "spec/rpx_now/contacts_collection_spec.rb",
-     "spec/rpx_now/request_spec.rb",
      "spec/rpx_now/user_proxy_spec.rb",
      "spec/rpx_now_spec.rb",
      "spec/spec_helper.rb"
@@ -48,8 +50,9 @@ Gem::Specification.new do |s|
     "spec/rpx_now_spec.rb",
      "spec/rpx_now/contacts_collection_spec.rb",
      "spec/rpx_now/user_proxy_spec.rb",
-     "spec/rpx_now/request_spec.rb",
-     "spec/spec_helper.rb"
+     "spec/rpx_now/api_spec.rb",
+     "spec/spec_helper.rb",
+     "spec/integration/mapping_spec.rb"
   ]
 
   if s.respond_to? :specification_version then
