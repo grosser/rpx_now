@@ -19,7 +19,6 @@ begin
     gem.homepage = "http://github.com/grosser/#{project_name}"
     gem.authors = ["Michael Grosser"]
     gem.add_dependency ['activesupport']
-    gem.files = ['**/*']
     gem.rubyforge_project = 'rpx-now'
   end
 

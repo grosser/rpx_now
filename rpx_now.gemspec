@@ -15,7 +15,8 @@ Gem::Specification.new do |s|
     "README.markdown"
   ]
   s.files = [
-    "CHANGELOG",
+    ".gitignore",
+     "CHANGELOG",
      "MIGRATION",
      "README.markdown",
      "Rakefile",
@@ -27,9 +28,6 @@ Gem::Specification.new do |s|
      "lib/rpx_now/contacts_collection.rb",
      "lib/rpx_now/user_integration.rb",
      "lib/rpx_now/user_proxy.rb",
-     "pkg/rpx_now-0.5.10.gem",
-     "pkg/rpx_now-0.5.11.gem",
-     "pkg/rpx_now-0.6.1.gem",
      "rdoc/README.rdoc",
      "rpx_now.gemspec",
      "spec/fixtures/get_contacts_response.json",
