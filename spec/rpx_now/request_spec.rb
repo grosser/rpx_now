@@ -38,4 +38,13 @@ describe RPXNow::Request do
       }.should raise_error(RPXNow::ServiceUnavailableError)
     end
   end
+
+  describe :request_object do
+    it "converts symbols to string keys" do
+      mock = ''
+      mock.should_receive(:form_data=).with([['symbol', 'value']])
+      Net::HTTP::Post.should_receive(:new).and_return(mock)
+      RPXNow::Request.send(:request_object, 'something', :symbol=>'value')
+    end
+  end
 end

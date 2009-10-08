@@ -13,18 +13,29 @@ module RPXNow
     private
 
     def self.request(path, data)
-      request = Net::HTTP::Post.new(path)
-      request.form_data = data.map{|k,v| [k.to_s,v]}#symbol keys -> string because of ruby 1.9.x bug http://redmine.ruby-lang.org/issues/show/1351
-      make_request(request)
+      client.request(request_object(path, data))
     end
 
-    def self.make_request(request)
-      http = Net::HTTP.new(HOST, 443)
-      http.use_ssl = true
-      http.ca_file = SSL_CERT
-      http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-      http.verify_depth = 5
-      http.request(request)
+    def self.request_object(path, data)
+      request = Net::HTTP::Post.new(path)
+      request.form_data = stringify_keys(data)
+      request
+    end
+
+    # symbol keys -> string keys
+    # because of ruby 1.9.x bug in Net::HTTP
+    # http://redmine.ruby-lang.org/issues/show/1351
+    def self.stringify_keys(hash)
+      hash.map{|k,v| [k.to_s,v]}
+    end
+
+    def self.client
+      client = Net::HTTP.new(HOST, 443)
+      client.use_ssl = true
+      client.ca_file = SSL_CERT
+      client.verify_mode = OpenSSL::SSL::VERIFY_PEER
+      client.verify_depth = 5
+      client
     end
 
     def self.parse_response(response)
