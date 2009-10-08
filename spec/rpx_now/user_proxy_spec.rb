@@ -11,23 +11,22 @@ end
 describe RPXNow::UserProxy do
   before { @user = User.new }
 
-  it "should create a proxy" do
-    RPXNow::UserProxy.expects(:new).with(@user.id).returns('proxy')
-    @user.rpx.should == 'proxy'
+  it "has a proxy" do
+    @user.rpx.class.should == RPXNow::UserProxy
   end
 
   it "has identifiers" do
-    RPXNow.expects(:mappings).with(@user.id).returns('identifiers')
-    @user.rpx.identifiers.should == 'identifiers'
+    RPXNow.should_receive(:mappings).with(@user.id).and_return(['identifiers'])
+    @user.rpx.identifiers.should == ['identifiers']
   end
 
   it "can map" do
-    RPXNow.expects(:map).with('identifier', @user.id).returns('new_mapping')
-    @user.rpx.map('identifier').should == 'new_mapping'
+    RPXNow.should_receive(:map).with('identifier', @user.id)
+    @user.rpx.map('identifier')
   end
 
   it "can unmap" do
-    RPXNow.expects(:unmap).with('identifier', @user.id)
+    RPXNow.should_receive(:unmap).with('identifier', @user.id)
     @user.rpx.unmap('identifier')
   end
 end
