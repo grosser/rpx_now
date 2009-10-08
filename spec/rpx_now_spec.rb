@@ -9,7 +9,7 @@ describe RPXNow do
   describe :api_key= do
     it "stores the api key, so i do not have to supply everytime" do
       RPXNow.api_key='XX'
-      RPXNow::Request.should_receive(:request).with{|x,data|data[:apiKey]=='XX'}.and_return mock(:code=>'200', :body=>%Q({"stat":"ok"}))
+      RPXNow::Request.should_receive(:request).with{|x,data|data[:apiKey]=='XX'}.and_return fake_response
       RPXNow.mappings(1)
     end
   end
@@ -62,7 +62,8 @@ describe RPXNow do
     
     it "can build an unobtrusive widget with specific version" do
       expected = %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v300/signin?token_url=http://fake.domain.com/">sign on</a>)
-      RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/', { :unobtrusive => true, :api_version => 300 }).should == expected
+      actual = RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/', { :unobtrusive => true, :api_version => 300 })
+      actual.should == expected
     end
     
     it "allows to specify the version of the widget" do
@@ -146,20 +147,24 @@ describe RPXNow do
     end
     
     it "can send additional parameters" do
-      RPXNow::Request.should_receive(:request).with{|url,data|
-        data[:extended].should == 'true'
-      }.and_return @response
+      RPXNow::Request.should_receive(:request).
+        with{|url,data| data[:extended].should == 'true'}.
+        and_return @response
       RPXNow.user_data('',:extended=>'true')
     end
 
     it "works with api version as option" do
-      RPXNow::Request.should_receive(:request).with('/api/v123/auth_info', :apiKey=>API_KEY, :token=>'id', :extended=>'abc').and_return @response
+      RPXNow::Request.should_receive(:request).
+        with('/api/v123/auth_info', :apiKey=>API_KEY, :token=>'id', :extended=>'abc').
+        and_return @response
       RPXNow.user_data('id', :extended=>'abc', :api_version=>123)
       RPXNow.api_version.should == API_VERSION
     end
 
     it "works with apiKey as option" do
-      RPXNow::Request.should_receive(:request).with('/api/v2/auth_info', :apiKey=>'THE KEY', :token=>'id', :extended=>'abc').and_return @response
+      RPXNow::Request.should_receive(:request).
+        with('/api/v2/auth_info', :apiKey=>'THE KEY', :token=>'id', :extended=>'abc').
+        and_return @response
       RPXNow.user_data('id', :extended=>'abc', :apiKey=>'THE KEY')
       RPXNow.api_key.should == API_KEY
     end
@@ -185,35 +190,37 @@ describe RPXNow do
   describe :contacts do
     it "finds all contacts" do
       response = fake_response(JSON.parse(File.read('spec/fixtures/get_contacts_response.json')))
-      RPXNow::Request.should_receive(:request).with('/api/v2/get_contacts',:identifier=>'xx', :apiKey=>API_KEY).and_return response
+      RPXNow::Request.should_receive(:request).
+        with('/api/v2/get_contacts',:identifier=>'xx', :apiKey=>API_KEY).
+        and_return response
       RPXNow.contacts('xx').size.should == 5
     end
   end
 
   describe :mappings do
-    it "parses JSON response to unmap data" do
-
-      RPXNow::Request.should_receive(:request).and_return fake_response("identifiers"  =>  ["http://test.myopenid.com/"])
+    it "shows all mappings" do
+      RPXNow::Request.should_receive(:request).
+        with("/api/v2/mappings", :apiKey=>API_KEY, :primaryKey=>1).
+        and_return fake_response("identifiers" => ["http://test.myopenid.com/"])
       RPXNow.mappings(1).should == ["http://test.myopenid.com/"]
     end
   end
 
   describe :map do
-    it "adds a mapping" do
-      RPXNow::Request.should_receive(:request).and_return fake_response
+    it "maps a identifier" do
+      RPXNow::Request.should_receive(:request).
+        with("/api/v2/map", :apiKey=>API_KEY, :primaryKey=>1, :identifier=>"http://test.myopenid.com").
+        and_return fake_response
       RPXNow.map('http://test.myopenid.com',1)
     end
   end
 
   describe :unmap do
     it "unmaps a indentifier" do
-      RPXNow::Request.should_receive(:request).and_return fake_response
+      RPXNow::Request.should_receive(:request).
+        with("/api/v2/unmap", :apiKey=>API_KEY, :primaryKey=>1, :identifier=>"http://test.myopenid.com").
+        and_return fake_response
       RPXNow.unmap('http://test.myopenid.com', 1)
-    end
-
-    it "can be called with a specific version" do
-      RPXNow::Request.should_receive(:request).with{|a,b|a == "/api/v300/unmap"}.and_return fake_response
-      RPXNow.unmap('http://test.myopenid.com', 1, :api_key=>'xxx', :api_version=>300)
     end
   end
 
