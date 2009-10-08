@@ -16,14 +16,14 @@ describe RPXNow do
     end
 
     it "stores the api key, so i do not have to supply everytime" do
-      RPXNow::Request.should_receive(:request).
+      RPXNow::Api.should_receive(:request).
         with(anything, hash_including(:apiKey => 'XX')).
         and_return fake_response
       RPXNow.mappings(1)
     end
 
     it "is not overwritten when overwriting for a single request" do
-      RPXNow::Request.should_receive(:request).
+      RPXNow::Api.should_receive(:request).
         with(anything, hash_including(:apiKey => 'YY')).
         and_return fake_response
       RPXNow.mappings(1, :apiKey => 'YY')
@@ -43,7 +43,7 @@ describe RPXNow do
 
     it "used for every request" do
       RPXNow.api_version='XX'
-      RPXNow::Request.should_receive(:request).
+      RPXNow::Api.should_receive(:request).
         with('/api/vXX/mappings', anything).
         and_return fake_response
       RPXNow.mappings(1)
@@ -51,7 +51,7 @@ describe RPXNow do
 
     it "is not overwritten when overwriting for a single request" do
       RPXNow.api_version='XX'
-      RPXNow::Request.should_receive(:request).
+      RPXNow::Api.should_receive(:request).
         with('/api/vYY/mappings', anything).
         and_return fake_response
       RPXNow.mappings(1, :api_version => 'YY')
@@ -60,7 +60,7 @@ describe RPXNow do
 
     it "is not passed in data for request" do
       RPXNow.api_version='XX'
-      RPXNow::Request.should_receive(:request).
+      RPXNow::Api.should_receive(:request).
         with(anything, hash_not_including(:api_version => 'YY')).
         and_return fake_response
       RPXNow.mappings(1, :api_version => 'YY')
@@ -161,26 +161,26 @@ describe RPXNow do
         :identifier => 'https://www.google.com/accounts/o8/id?id=AItOawmaOlyYezg_WfbgP_qjaUyHjmqZD9qNIVM',
         :username   => 'grosser.michael',
       }
-      RPXNow::Request.should_receive(:request).and_return @response
+      RPXNow::Api.should_receive(:request).and_return @response
       RPXNow.user_data('').should == expected
     end
     
     it "adds a :id when primaryKey was returned" do
       @response_body['profile']['primaryKey'] = "2"
       response = fake_response(@response_body)
-      RPXNow::Request.should_receive(:request).and_return response
+      RPXNow::Api.should_receive(:request).and_return response
       RPXNow.user_data('')[:id].should == '2'
     end
 
     it "handles primaryKeys that are not numeric" do
       @response_body['profile']['primaryKey'] = "dbalatero"
       response = fake_response(@response_body)
-      RPXNow::Request.should_receive(:request).and_return response
+      RPXNow::Api.should_receive(:request).and_return response
       RPXNow.user_data('')[:id].should == 'dbalatero'
     end
     
     it "hands JSON response to supplied block" do
-      RPXNow::Request.should_receive(:request).and_return @response
+      RPXNow::Api.should_receive(:request).and_return @response
       response = nil
       RPXNow.user_data(''){|data| response = data}
       response.delete('stat') # dunno why it happens, but is not important...
@@ -188,12 +188,12 @@ describe RPXNow do
     end
     
     it "returns what the supplied block returned" do
-      RPXNow::Request.should_receive(:request).and_return @response
+      RPXNow::Api.should_receive(:request).and_return @response
       RPXNow.user_data(''){|data| "x"}.should == 'x'
     end
     
     it "can send additional parameters" do
-      RPXNow::Request.should_receive(:request).
+      RPXNow::Api.should_receive(:request).
         with(anything, hash_including(:extended => 'true')).
         and_return @response
       RPXNow.user_data('',:extended=>'true')
@@ -202,7 +202,7 @@ describe RPXNow do
     # these 2 tests are kind of duplicates of the api_version/key tests,
     # but i want to be extra-sure user_data works
     it "works with api version as option" do
-      RPXNow::Request.should_receive(:request).
+      RPXNow::Api.should_receive(:request).
         with('/api/v123/auth_info', anything).
         and_return @response
       RPXNow.user_data('id', :extended=>'abc', :api_version=>123)
@@ -210,7 +210,7 @@ describe RPXNow do
     end
 
     it "works with apiKey as option" do
-      RPXNow::Request.should_receive(:request).
+      RPXNow::Api.should_receive(:request).
         with('/api/v2/auth_info', hash_including(:apiKey=>'THE KEY')).
         and_return @response
       RPXNow.user_data('id', :extended=>'abc', :apiKey=>'THE KEY')
@@ -220,7 +220,7 @@ describe RPXNow do
 
   describe :set_status do
     it "sets the status" do
-      RPXNow::Request.should_receive(:request).
+      RPXNow::Api.should_receive(:request).
         with("/api/v2/set_status", :identifier=>"identifier", :status=>"Chillen...", :apiKey=>API_KEY).
         and_return fake_response
       RPXNow.set_status('identifier', 'Chillen...')
@@ -240,7 +240,7 @@ describe RPXNow do
   describe :contacts do
     it "finds all contacts" do
       response = fake_response(JSON.parse(File.read('spec/fixtures/get_contacts_response.json')))
-      RPXNow::Request.should_receive(:request).
+      RPXNow::Api.should_receive(:request).
         with('/api/v2/get_contacts',:identifier=>'xx', :apiKey=>API_KEY).
         and_return response
       RPXNow.contacts('xx').size.should == 5
@@ -249,7 +249,7 @@ describe RPXNow do
 
   describe :mappings do
     it "shows all mappings" do
-      RPXNow::Request.should_receive(:request).
+      RPXNow::Api.should_receive(:request).
         with("/api/v2/mappings", :apiKey=>API_KEY, :primaryKey=>1).
         and_return fake_response("identifiers" => ["http://test.myopenid.com/"])
       RPXNow.mappings(1).should == ["http://test.myopenid.com/"]
@@ -258,7 +258,7 @@ describe RPXNow do
 
   describe :map do
     it "maps a identifier" do
-      RPXNow::Request.should_receive(:request).
+      RPXNow::Api.should_receive(:request).
         with("/api/v2/map", :apiKey=>API_KEY, :primaryKey=>1, :identifier=>"http://test.myopenid.com").
         and_return fake_response
       RPXNow.map('http://test.myopenid.com',1)
@@ -267,7 +267,7 @@ describe RPXNow do
 
   describe :unmap do
     it "unmaps a indentifier" do
-      RPXNow::Request.should_receive(:request).
+      RPXNow::Api.should_receive(:request).
         with("/api/v2/unmap", :apiKey=>API_KEY, :primaryKey=>1, :identifier=>"http://test.myopenid.com").
         and_return fake_response
       RPXNow.unmap('http://test.myopenid.com', 1)

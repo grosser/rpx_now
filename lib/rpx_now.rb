@@ -2,7 +2,7 @@ require 'net/http'
 require 'net/https'
 require 'json'
 
-require 'rpx_now/request'
+require 'rpx_now/api'
 require 'rpx_now/contacts_collection'
 require 'rpx_now/user_integration'
 require 'rpx_now/user_proxy'
@@ -22,7 +22,7 @@ module RPXNow
   # - nil when token was invalid / data was not found
   def user_data(token, options={})
     begin
-      data = Request.post("auth_info", options.merge(:token => token))
+      data = Api.call("auth_info", options.merge(:token => token))
       if block_given? then yield(data) else parse_user_data(data) end
     rescue ServerError
       return nil if $!.to_s=~/Data not found/
@@ -33,7 +33,7 @@ module RPXNow
   # set the users status
   def set_status(identifier, status, options={})
     options = options.merge(:identifier => identifier, :status => status)
-    data = Request.post("set_status", options)
+    data = Api.call("set_status", options)
   rescue ServerError
     return nil if $!.to_s=~/Data not found/
     raise
@@ -41,25 +41,25 @@ module RPXNow
 
   # maps an identifier to an primary-key (e.g. user.id)
   def map(identifier, primary_key, options={})
-    Request.post("map", options.merge(:identifier => identifier, :primaryKey => primary_key))
+    Api.call("map", options.merge(:identifier => identifier, :primaryKey => primary_key))
   end
 
   # un-maps an identifier to an primary-key (e.g. user.id)
   def unmap(identifier, primary_key, options={})
-    Request.post("unmap", options.merge(:identifier => identifier, :primaryKey => primary_key))
+    Api.call("unmap", options.merge(:identifier => identifier, :primaryKey => primary_key))
   end
 
   # returns an array of identifiers which are mapped to one of your primary-keys (e.g. user.id)
   def mappings(primary_key, options={})
-    Request.post("mappings", options.merge(:primaryKey => primary_key))['identifiers']
+    Api.call("mappings", options.merge(:primaryKey => primary_key))['identifiers']
   end
 
   def all_mappings(options={})
-    Request.post("all_mappings", options)['mappings']
+    Api.call("all_mappings", options)['mappings']
   end
 
   def contacts(identifier, options={})
-    data = Request.post("get_contacts", options.merge(:identifier => identifier))
+    data = Api.call("get_contacts", options.merge(:identifier => identifier))
     RPXNow::ContactsCollection.new(data['response'])
   end
   alias get_contacts contacts
@@ -67,7 +67,7 @@ module RPXNow
   def embed_code(subdomain,url,options={})
     options = {:width => '400', :height => '240', :language => 'en'}.merge(options)
     <<-EOF
-      <iframe src="https://#{subdomain}.#{Request::HOST}/openid/embed?token_url=#{url}&language_preference=#{options[:language]}"
+      <iframe src="https://#{subdomain}.#{Api::HOST}/openid/embed?token_url=#{url}&language_preference=#{options[:language]}"
         scrolling="no" frameBorder="no" style="width:#{options[:width]}px;height:#{options[:height]}px;">
       </iframe>
     EOF
@@ -100,16 +100,16 @@ module RPXNow
 
   def unobtrusive_popup_code(text, subdomain, url, options={})
     version = extract_version! options
-    "<a class=\"rpxnow\" href=\"https://#{subdomain}.#{Request::HOST}/openid/v#{version}/signin?token_url=#{url}\">#{text}</a>"
+    "<a class=\"rpxnow\" href=\"https://#{subdomain}.#{Api::HOST}/openid/v#{version}/signin?token_url=#{url}\">#{text}</a>"
   end
 
   def obtrusive_popup_code(text, subdomain, url, options = {})
     version = extract_version! options
     <<-EOF
-      <a class="rpxnow" onclick="return false;" href="https://#{subdomain}.#{Request::HOST}/openid/v#{version}/signin?token_url=#{url}">
+      <a class="rpxnow" onclick="return false;" href="https://#{subdomain}.#{Api::HOST}/openid/v#{version}/signin?token_url=#{url}">
         #{text}
       </a>
-      <script src="https://#{Request::HOST}/openid/v#{version}/widget" type="text/javascript"></script>
+      <script src="https://#{Api::HOST}/openid/v#{version}/widget" type="text/javascript"></script>
       <script type="text/javascript">
         //<![CDATA[
         RPXNOW.token_url = "#{url}";

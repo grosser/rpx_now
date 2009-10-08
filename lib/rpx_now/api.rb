@@ -1,9 +1,13 @@
 module RPXNow
-  class Request
+  # low-level interaction with rpxnow.com api
+  # - send requests
+  # - parse response
+  # - handle server errors
+  class Api
     HOST = 'rpxnow.com'
     SSL_CERT = File.join(File.dirname(__FILE__), '..', '..', 'certs', 'ssl_cert.pem')
 
-    def self.post(method, data)
+    def self.call(method, data)
       version = RPXNow.extract_version! data
       path = "/api/v#{version}/#{method}"
       response = request(path, {:apiKey => RPXNow.api_key}.merge(data))
