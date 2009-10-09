@@ -105,13 +105,29 @@ describe RPXNow do
     it "defaults to obtrusive output" do
       RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/').should =~ /script src=/
     end
-    
-    it "can build an unobtrusive widget with specific version" do
-      expected = %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v300/signin?token_url=http://fake.domain.com/">sign on</a>)
-      actual = RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/', { :unobtrusive => true, :api_version => 300 })
-      actual.should == expected
+
+    it "does not change supplied options" do
+      options = {:xxx => 1}
+      RPXNow.popup_code('a','b','c', options)
+      options.should == {:xxx => 1}
     end
-    
+
+    describe 'unobstrusive' do
+      it "can build an unobtrusive widget" do
+        expected = %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v2/signin?token_url=http://fake.domain.com/&language_preference=en">sign on</a>)
+        actual = RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/', :unobtrusive => true)
+        expected.should == actual
+      end
+
+      it "can change api version" do
+        RPXNow.popup_code('x', 'y', 'z', :unobtrusive => true, :api_version => 'XX').should include("openid/vXX/signin?")
+      end
+
+      it "can change language" do
+        RPXNow.popup_code('x', 'y', 'z', :unobtrusive => true, :language => 'XX').should include("&language_preference=XX")
+      end
+    end
+
     it "allows to specify the version of the widget" do
       RPXNow.popup_code('x','y','z', :api_version => 300).should =~ %r(/openid/v300/signin)
     end

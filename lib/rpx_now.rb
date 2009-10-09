@@ -74,6 +74,8 @@ module RPXNow
   end
 
   def popup_code(text, subdomain, url, options = {})
+    options = options.dup
+    options[:language] ||= 'en'
     if options[:unobtrusive]
       unobtrusive_popup_code(text, subdomain, url, options)
     else
@@ -100,7 +102,7 @@ module RPXNow
 
   def unobtrusive_popup_code(text, subdomain, url, options={})
     version = extract_version! options
-    "<a class=\"rpxnow\" href=\"https://#{subdomain}.#{Api::HOST}/openid/v#{version}/signin?token_url=#{url}&language_preference=#{options[:language]||'en'}\">#{text}</a>"
+    %Q(<a class="rpxnow" href="https://#{subdomain}.#{Api::HOST}/openid/v#{version}/signin?token_url=#{url}&language_preference=#{options[:language]}">#{text}</a>)
   end
 
   def obtrusive_popup_code(text, subdomain, url, options = {})
@@ -116,7 +118,7 @@ module RPXNow
 
         RPXNOW.realm = "#{subdomain}";
         RPXNOW.overlay = true;
-        RPXNOW.language_preference = '#{options[:language]||'en'}';
+        RPXNOW.language_preference = '#{options[:language]}';
         //]]>
       </script>
     EOF
