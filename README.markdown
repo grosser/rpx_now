@@ -50,6 +50,8 @@ Environment
 
 Controller
 ----------
+    skip_before_filter :verify_authenticity_token, :only => [:rpx_token] # RPX does not pass Rails form tokens...
+
     # user_data
     # found: {:name=>'John Doe', :username => 'john', :email=>'john@doe.com', :identifier=>'blug.google.com/openid/dsdfsdfs3f3'}
     # not found: nil (can happen with e.g. invalid tokens)
