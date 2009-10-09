@@ -100,7 +100,7 @@ module RPXNow
 
   def unobtrusive_popup_code(text, subdomain, url, options={})
     version = extract_version! options
-    "<a class=\"rpxnow\" href=\"https://#{subdomain}.#{Api::HOST}/openid/v#{version}/signin?token_url=#{url}\">#{text}</a>"
+    "<a class=\"rpxnow\" href=\"https://#{subdomain}.#{Api::HOST}/openid/v#{version}/signin?token_url=#{url}&language_preference=#{options[:language]||'en'}\">#{text}</a>"
   end
 
   def obtrusive_popup_code(text, subdomain, url, options = {})
