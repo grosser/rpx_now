@@ -35,12 +35,12 @@ View
     OR
     <%=RPXNow.popup_code('Login here...', 'mywebsite', rpx_token_sessions_url, options)%>
 
-Options
-    :language=>'en' # rpx tries to detect the users language, but you may overwrite it [possible languages](https://rpxnow.com/docs#sign-in_localization)
-    :default_provider=>'google' # [possible default providers](https://rpxnow.com/docs#sign-in_default_provider)
-    :flags=>'show_provider_list' # [possible flags](https://rpxnow.com/docs#sign-in_interface)
+###Options
+`:language=>'en'` rpx tries to detect the users language, but you may overwrite it [possible languages](https://rpxnow.com/docs#sign-in_localization)  
+`:default_provider=>'google'` [possible default providers](https://rpxnow.com/docs#sign-in_default_provider)  
+`:flags=>'show_provider_list'` [possible flags](https://rpxnow.com/docs#sign-in_interface)  
 
-`popup_code` can also be called with `:unobstrusive=>true`, to still get a nice popup include `RPXNow.popup_source('mywebsite',rpx_token_sessions_url, [options])` somewhere else.
+`popup_code` can also be called with `:unobstrusive=>true`. To still get a nice popup include `RPXNow.popup_source('mywebsite',rpx_token_sessions_url, [options])` somewhere else.
 Options like :language / :flags should be given for both.
 
 Environment
