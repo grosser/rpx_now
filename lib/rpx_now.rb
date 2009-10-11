@@ -67,7 +67,7 @@ module RPXNow
   def embed_code(subdomain,url,options={})
     options = {:width => '400', :height => '240', :language => 'en'}.merge(options)
     <<-EOF
-      <iframe src="https://#{subdomain}.#{Api::HOST}/openid/embed?token_url=#{url}&language_preference=#{options[:language]}"
+      <iframe src="https://#{subdomain}.#{Api::HOST}/openid/embed?token_url=#{url}&language_preference=#{options[:language]}&flags=#{options[:flags]}"
         scrolling="no" frameBorder="no" style="width:#{options[:width]}px;height:#{options[:height]}px;">
       </iframe>
     EOF
@@ -102,7 +102,7 @@ module RPXNow
 
   def unobtrusive_popup_code(text, subdomain, url, options={})
     version = extract_version! options
-    %Q(<a class="rpxnow" href="https://#{subdomain}.#{Api::HOST}/openid/v#{version}/signin?token_url=#{url}&language_preference=#{options[:language]}">#{text}</a>)
+    %Q(<a class="rpxnow" href="https://#{subdomain}.#{Api::HOST}/openid/v#{version}/signin?token_url=#{url}&language_preference=#{options[:language]}&flags=#{options[:flags]}">#{text}</a>)
   end
 
   def obtrusive_popup_code(text, subdomain, url, options = {})
@@ -115,7 +115,7 @@ module RPXNow
       <script type="text/javascript">
         //<![CDATA[
         RPXNOW.token_url = "#{url}";
-
+        RPXNOW.flags = "#{options[:flags]}";
         RPXNOW.realm = "#{subdomain}";
         RPXNOW.overlay = true;
         RPXNOW.language_preference = '#{options[:language]}';
