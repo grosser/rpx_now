@@ -40,11 +40,13 @@ View
 `:default_provider=>'google'` [possible default providers](https://rpxnow.com/docs#sign-in_default_provider)  
 `:flags=>'show_provider_list'` [possible flags](https://rpxnow.com/docs#sign-in_interface)  
 
-`popup_code` can also be called with `:unobstrusive=>true`. To still get a nice popup include `RPXNow.popup_source('mywebsite',rpx_token_sessions_url, [options])` somewhere else.
+###Unobtrusive / JS-last
+`popup_code` can also be called with `:unobtrusive=>true` ( --> just link without javascript include).  
+To still get the normal popup add `RPXNow.popup_source('mywebsite',rpx_token_sessions_url, [options])`.  
 Options like :language / :flags should be given for both.
 
-Environment
------------
+environment.rb
+--------------
     Rails::Initializer.run do |config|
       config.gem "rpx_now"
       ...
