@@ -76,10 +76,10 @@ describe RPXNow do
       RPXNow.embed_code('xxx','my_url').should =~ /token_url=my_url/
     end
     
-    it "defaults to English" do
-      RPXNow.embed_code('xxx', 'my_url').should =~ /language_preference=en/
+    it "defaults to no language" do
+      RPXNow.embed_code('xxx', 'my_url').should_not =~ /language_preference/
     end
-    
+
     it "has a changeable language" do
       RPXNow.embed_code('xxx', 'my_url', :language => 'es').should =~ /language_preference=es/
     end
@@ -114,9 +114,9 @@ describe RPXNow do
 
     describe 'unobstrusive' do
       it "can build an unobtrusive widget" do
-        expected = %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v2/signin?token_url=http://fake.domain.com/&language_preference=en">sign on</a>)
+        expected = %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v2/signin?token_url=http://fake.domain.com/">sign on</a>)
         actual = RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/', :unobtrusive => true)
-        expected.should == actual
+        actual.should == expected
       end
 
       it "can change api version" do
@@ -124,7 +124,11 @@ describe RPXNow do
       end
 
       it "can change language" do
-        RPXNow.popup_code('x', 'y', 'z', :unobtrusive => true, :language => 'XX').should include("&language_preference=XX")
+        RPXNow.popup_code('x', 'y', 'z', :unobtrusive => true, :language => 'XX').should include("language_preference=XX")
+      end
+
+      it "can add flags" do
+        RPXNow.popup_code('x', 'y', 'z', :unobtrusive => true, :flags => 'test').should include("flags=test")
       end
     end
 
@@ -136,12 +140,16 @@ describe RPXNow do
       RPXNow.popup_code('x','y','z').should =~ %r(/openid/v2/signin)
     end
 
-    it "defaults to english" do
-      RPXNow.popup_code('x','y','z').should =~ /RPXNOW.language_preference = 'en'/
+    it "defaults to no language" do
+      RPXNow.popup_code('x','y','z').should_not =~ /RPXNOW.language_preference/
     end
-    
+
     it "has a changeable language" do
-      RPXNow.popup_code('x','y','z',:language=>'de').should =~ /RPXNOW.language_preference = 'de'/
+      RPXNow.popup_code('x','y','z', :language=>'de').should =~ /RPXNOW.language_preference = 'de'/
+    end
+
+    it "can have flags" do
+      RPXNow.popup_code('x','y','z', :flags=>'test').should =~ /RPXNOW.flags = 'test'/
     end
   end
 

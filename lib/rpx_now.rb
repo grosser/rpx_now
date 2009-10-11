@@ -64,18 +64,20 @@ module RPXNow
   end
   alias get_contacts contacts
 
-  def embed_code(subdomain,url,options={})
-    options = {:width => '400', :height => '240', :language => 'en'}.merge(options)
+  # iframe for rpx login
+  # options: :width, :height, :language, :flags
+  def embed_code(subdomain, url, options={})
+    options = {:width => '400', :height => '240'}.merge(options)
     <<-EOF
-      <iframe src="https://#{subdomain}.#{Api::HOST}/openid/embed?token_url=#{url}&language_preference=#{options[:language]}&flags=#{options[:flags]}"
+      <iframe src="https://#{subdomain}.#{Api::HOST}/openid/embed?#{embed_params(url, options)}"
         scrolling="no" frameBorder="no" style="width:#{options[:width]}px;height:#{options[:height]}px;">
       </iframe>
     EOF
   end
 
+  # popup window for rpx login
+  # options: :language / :flags / :unobtrusive
   def popup_code(text, subdomain, url, options = {})
-    options = options.dup
-    options[:language] ||= 'en'
     if options[:unobtrusive]
       unobtrusive_popup_code(text, subdomain, url, options)
     else
@@ -88,6 +90,14 @@ module RPXNow
   end
 
   private
+
+  def self.embed_params(url, options)
+    {
+      'token_url' => url,
+      'language_preference' => options[:language],
+      'flags' => options[:flags]
+    }.map{|k,v| "#{k}=#{v}" if v}.compact.join('&')
+  end
 
   def self.parse_user_data(response)
     user_data = response['profile']
@@ -102,7 +112,7 @@ module RPXNow
 
   def unobtrusive_popup_code(text, subdomain, url, options={})
     version = extract_version! options
-    %Q(<a class="rpxnow" href="https://#{subdomain}.#{Api::HOST}/openid/v#{version}/signin?token_url=#{url}&language_preference=#{options[:language]}&flags=#{options[:flags]}">#{text}</a>)
+    %Q(<a class="rpxnow" href="https://#{subdomain}.#{Api::HOST}/openid/v#{version}/signin?#{embed_params(url, options)}">#{text}</a>)
   end
 
   def obtrusive_popup_code(text, subdomain, url, options = {})
@@ -114,11 +124,11 @@ module RPXNow
       <script src="https://#{Api::HOST}/openid/v#{version}/widget" type="text/javascript"></script>
       <script type="text/javascript">
         //<![CDATA[
-        RPXNOW.token_url = "#{url}";
-        RPXNOW.flags = "#{options[:flags]}";
-        RPXNOW.realm = "#{subdomain}";
+        RPXNOW.token_url = '#{url}';
+        RPXNOW.realm = '#{subdomain}';
         RPXNOW.overlay = true;
-        RPXNOW.language_preference = '#{options[:language]}';
+        #{ "RPXNOW.language_preference = '#{options[:language]}';" if options[:language] }
+        #{ "RPXNOW.flags = '#{options[:flags]}';" if options[:flags] }
         //]]>
       </script>
     EOF
