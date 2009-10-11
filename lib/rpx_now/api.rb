@@ -8,10 +8,21 @@ module RPXNow
     SSL_CERT = File.join(File.dirname(__FILE__), '..', '..', 'certs', 'ssl_cert.pem')
 
     def self.call(method, data)
-      version = RPXNow.extract_version! data
+      data = data.dup
+      version = RPXNow.extract_version(data)
+      data.delete(:api_version)
+
       path = "/api/v#{version}/#{method}"
       response = request(path, {:apiKey => RPXNow.api_key}.merge(data))
       parse_response(response)
+    end
+
+    def self.host(subdomain=nil)
+      if subdomain
+        "https://#{subdomain}.#{Api::HOST}"
+      else
+        "https://#{Api::HOST}"
+      end
     end
 
     private

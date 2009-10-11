@@ -69,7 +69,7 @@ module RPXNow
   def embed_code(subdomain, url, options={})
     options = {:width => '400', :height => '240'}.merge(options)
     <<-EOF
-      <iframe src="https://#{subdomain}.#{Api::HOST}/openid/embed?#{embed_params(url, options)}"
+      <iframe src="#{Api.host(subdomain)}/openid/embed?#{embed_params(url, options)}"
         scrolling="no" frameBorder="no" style="width:#{options[:width]}px;height:#{options[:height]}px;">
       </iframe>
     EOF
@@ -85,8 +85,25 @@ module RPXNow
     end
   end
 
-  def extract_version!(options)
-    options.delete(:api_version) || api_version
+  # javascript for popup
+  # only needed in combination with popup_code(x,y,z, :unobtrusive => true)
+  def popup_source(subdomain, url, options={})
+    <<-EOF
+      <script src="#{Api.host}/openid/v#{extract_version(options)}/widget" type="text/javascript"></script>
+      <script type="text/javascript">
+        //<![CDATA[
+        RPXNOW.token_url = '#{url}';
+        RPXNOW.realm = '#{subdomain}';
+        RPXNOW.overlay = true;
+        #{ "RPXNOW.language_preference = '#{options[:language]}';" if options[:language] }
+        #{ "RPXNOW.flags = '#{options[:flags]}';" if options[:flags] }
+        //]]>
+      </script>
+    EOF
+  end
+
+  def extract_version(options)
+    options[:api_version] || api_version
   end
 
   private
@@ -111,27 +128,12 @@ module RPXNow
   end
 
   def unobtrusive_popup_code(text, subdomain, url, options={})
-    version = extract_version! options
-    %Q(<a class="rpxnow" href="https://#{subdomain}.#{Api::HOST}/openid/v#{version}/signin?#{embed_params(url, options)}">#{text}</a>)
+    %Q(<a class="rpxnow" href="#{Api.host(subdomain)}/openid/v#{extract_version(options)}/signin?#{embed_params(url, options)}">#{text}</a>)
   end
 
   def obtrusive_popup_code(text, subdomain, url, options = {})
-    version = extract_version! options
-    <<-EOF
-      <a class="rpxnow" onclick="return false;" href="https://#{subdomain}.#{Api::HOST}/openid/v#{version}/signin?token_url=#{url}">
-        #{text}
-      </a>
-      <script src="https://#{Api::HOST}/openid/v#{version}/widget" type="text/javascript"></script>
-      <script type="text/javascript">
-        //<![CDATA[
-        RPXNOW.token_url = '#{url}';
-        RPXNOW.realm = '#{subdomain}';
-        RPXNOW.overlay = true;
-        #{ "RPXNOW.language_preference = '#{options[:language]}';" if options[:language] }
-        #{ "RPXNOW.flags = '#{options[:flags]}';" if options[:flags] }
-        //]]>
-      </script>
-    EOF
+    unobtrusive_popup_code(text, subdomain, url, options) +
+    popup_source(subdomain, url, options)
   end
 
   class ServerError < RuntimeError; end #backwards compatibility / catch all
