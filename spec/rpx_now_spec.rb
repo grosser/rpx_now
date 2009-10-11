@@ -130,6 +130,10 @@ describe RPXNow do
       it "can add flags" do
         RPXNow.popup_code('x', 'y', 'z', :unobtrusive => true, :flags => 'test').should include("flags=test")
       end
+
+      it "can add default_provider" do
+        RPXNow.popup_code('x', 'y', 'z', :unobtrusive => true, :default_provider => 'test').should include("default_provider=test")
+      end
     end
 
     it "allows to specify the version of the widget" do
@@ -140,16 +144,34 @@ describe RPXNow do
       RPXNow.popup_code('x','y','z').should =~ %r(/openid/v2/signin)
     end
 
-    it "defaults to no language" do
-      RPXNow.popup_code('x','y','z').should_not =~ /RPXNOW.language_preference/
+    describe 'language' do
+      it "defaults to no language" do
+        RPXNow.popup_code('x','y','z').should_not =~ /RPXNOW.language_preference/
+      end
+
+      it "has a changeable language" do
+        RPXNow.popup_code('x','y','z', :language=>'de').should =~ /RPXNOW.language_preference = 'de'/
+      end
     end
 
-    it "has a changeable language" do
-      RPXNow.popup_code('x','y','z', :language=>'de').should =~ /RPXNOW.language_preference = 'de'/
+    describe 'flags' do
+      it "defaults to no language" do
+        RPXNow.popup_code('x','y','z').should_not =~ /RPXNOW.flags/
+      end
+
+      it "can have flags" do
+        RPXNow.popup_code('x','y','z', :flags=>'test').should =~ /RPXNOW.flags = 'test'/
+      end
     end
 
-    it "can have flags" do
-      RPXNow.popup_code('x','y','z', :flags=>'test').should =~ /RPXNOW.flags = 'test'/
+    describe 'default_provider' do
+      it "defaults to no provider" do
+        RPXNow.popup_code('x','y','z').should_not =~ /RPXNOW.default_provider/
+      end
+
+      it "can have default_provider" do
+        RPXNow.popup_code('x','y','z', :default_provider=>'test').should =~ /RPXNOW.default_provider = 'test'/
+      end
     end
   end
 

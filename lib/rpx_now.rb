@@ -96,6 +96,7 @@ module RPXNow
         RPXNOW.realm = '#{subdomain}';
         RPXNOW.overlay = true;
         #{ "RPXNOW.language_preference = '#{options[:language]}';" if options[:language] }
+        #{ "RPXNOW.default_provider = '#{options[:default_provider]}';" if options[:default_provider] }
         #{ "RPXNOW.flags = '#{options[:flags]}';" if options[:flags] }
         //]]>
       </script>
@@ -110,9 +111,10 @@ module RPXNow
 
   def self.embed_params(url, options)
     {
-      'token_url' => url,
-      'language_preference' => options[:language],
-      'flags' => options[:flags]
+      :token_url => url,
+      :language_preference => options[:language],
+      :flags => options[:flags],
+      :default_provider => options[:default_provider]
     }.map{|k,v| "#{k}=#{v}" if v}.compact.join('&')
   end
 
