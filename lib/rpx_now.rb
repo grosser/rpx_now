@@ -23,7 +23,7 @@ module RPXNow
   def user_data(token, options={})
     begin
       data = Api.call("auth_info", options.merge(:token => token))
-      if block_given? then yield(data) else parse_user_data(data) end
+      if block_given? then yield(data) else parse_user_data(data, options) end
     rescue ServerError
       return nil if $!.to_s=~/Data not found/
       raise
@@ -118,7 +118,7 @@ module RPXNow
     }.map{|k,v| "#{k}=#{v}" if v}.compact.join('&')
   end
 
-  def self.parse_user_data(response)
+  def self.parse_user_data(response, options)
     user_data = response['profile']
     data = {}
     data[:identifier] = user_data['identifier']
@@ -126,6 +126,9 @@ module RPXNow
     data[:username] = user_data['preferredUsername'] || data[:email].to_s.sub(/@.*/,'')
     data[:name] = user_data['displayName'] || data[:username]
     data[:id] = user_data['primaryKey'] unless user_data['primaryKey'].to_s.empty?
+    (options[:additional] || []).each do |key|
+      data[key] = user_data[key.to_s]
+    end
     data
   end
 

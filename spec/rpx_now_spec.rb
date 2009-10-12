@@ -224,6 +224,13 @@ describe RPXNow do
       RPXNow::Api.should_receive(:request).and_return response
       RPXNow.user_data('')[:id].should == 'dbalatero'
     end
+
+    it "can fetch additional fields" do
+      @response_body['profile']['xxxy'] = "test"
+      response = fake_response(@response_body)
+      RPXNow::Api.should_receive(:request).and_return response
+      RPXNow.user_data('', :additional => [:xxxy])[:xxxy].should == 'test'
+    end
     
     it "hands JSON response to supplied block" do
       RPXNow::Api.should_receive(:request).and_return @response
@@ -273,13 +280,13 @@ describe RPXNow do
     end
   end
 
-  describe :read_user_data_from_response do
+  describe :parse_user_data do
     it "reads secondary names" do
-      RPXNow.send(:parse_user_data,{'profile'=>{'preferredUsername'=>'1'}})[:name].should == '1'
+      RPXNow.send(:parse_user_data,{'profile'=>{'preferredUsername'=>'1'}}, {})[:name].should == '1'
     end
     
     it "parses email when no name is found" do
-      RPXNow.send(:parse_user_data,{'profile'=>{'email'=>'1@xxx.com'}})[:name].should == '1'
+      RPXNow.send(:parse_user_data,{'profile'=>{'email'=>'1@xxx.com'}}, {})[:name].should == '1'
     end
   end
 

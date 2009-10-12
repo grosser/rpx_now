@@ -69,6 +69,10 @@ Controller
       redirect_to '/'
     end
 
+    # getting additional fields (these fields are rarely filled)
+    # all possibilities: https://rpxnow.com/docs#profile_data
+    data = RPXNow.user_data(params[:token], :additional => [:gender, :birthday, :photo, :providerName, ...])
+
     # raw request processing
     RPXNow.user_data(params[:token]){|raw| {:email=>raw['profile']['verifiedEmail']} }
 
