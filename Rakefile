@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'echoe'
 
 desc "Run all specs in spec directory"
 task :default do |t|
