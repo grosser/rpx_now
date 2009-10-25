@@ -1,6 +1,6 @@
 require 'net/http'
 require 'net/https'
-require 'json'
+require 'json_pure  '
 
 require 'rpx_now/api'
 require 'rpx_now/contacts_collection'
