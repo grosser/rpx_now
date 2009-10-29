@@ -126,6 +126,7 @@ Author
  - [jackdempsey](http://jackndempsey.blogspot.com)
  - [Patrick Reagan (reagent)](http://sneaq.net)
  - [Joris Trooster (trooster)](http://www.interstroom.nl)
+ - [Mick Staugaard (staugaard)](http://mick.staugaard.com/)
 
 [Michael Grosser](http://pragmatig.wordpress.com)  
 grosser.michael@gmail.com  
