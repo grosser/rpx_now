@@ -1,4 +1,5 @@
 require 'spec/spec_helper'
+require 'rpx_now/user_integration'
 
 class User
   include RPXNow::UserIntegration

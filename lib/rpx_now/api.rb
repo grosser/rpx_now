@@ -1,3 +1,7 @@
+require 'net/http'
+require 'net/https'
+require 'json'
+
 module RPXNow
   # low-level interaction with rpxnow.com api
   # - send requests
