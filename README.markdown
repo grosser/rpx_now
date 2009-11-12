@@ -117,8 +117,13 @@ TODO
 ====
  - add provider / credentials helpers ?
 
+
 Author
 ======
+
+__[rpx_now_gem mailing list](http://groups.google.com/group/rpx_now_gem)__
+
+
 ###Contributors
  - [Amunds](http://github.com/Amunds)
  - [DBA](http://github.com/DBA)
