@@ -132,6 +132,7 @@ __[rpx_now_gem mailing list](http://groups.google.com/group/rpx_now_gem)__
  - [Patrick Reagan (reagent)](http://sneaq.net)
  - [Joris Trooster (trooster)](http://www.interstroom.nl)
  - [Mick Staugaard (staugaard)](http://mick.staugaard.com/)
+ - [Kasper Weibel](http://github.com/weibel)
 
 [Michael Grosser](http://pragmatig.wordpress.com)  
 grosser.michael@gmail.com  
