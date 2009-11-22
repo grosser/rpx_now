@@ -109,7 +109,7 @@ module RPXNow
       :language_preference => options[:language],
       :flags => options[:flags],
       :default_provider => options[:default_provider]
-    }.map{|k,v| "#{k}=#{v}" if v}.compact.join('&')
+    }.map{|k,v| "#{k}=#{v}" if v}.compact.join('&amp;')
   end
 
   def self.parse_user_data(response, options)
