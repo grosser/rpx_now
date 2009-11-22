@@ -1,11 +1,6 @@
-require 'rubygems'
-
-desc "Run all specs in spec directory"
-task :default do |t|
-  options = "--colour --format progress --loadby --reverse"
-  files = FileList['spec/**/*_spec.rb']
-  system("spec #{options} #{files}")
-end
+task :default => :spec
+require 'spec/rake/spectask'
+Spec::Rake::SpecTask.new {|t| t.spec_opts = ['--color']}
 
 begin
   require 'jeweler'
@@ -18,16 +13,9 @@ begin
     gem.homepage = "http://github.com/grosser/#{project_name}"
     gem.authors = ["Michael Grosser"]
     gem.add_dependency ['json_pure']
-    gem.rubyforge_project = 'rpx-now'
   end
 
-  # fake task so that rubyforge:release works
-  task :rdoc do
-    `mkdir rdoc`
-    `echo documentation is at http://github.com/grosser/#{project_name} > rdoc/README.rdoc`
-  end
-
-  Jeweler::RubyforgeTasks.new
+  Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler, or one of its dependencies, is not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
