@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
-  s.date = %q{2009-10-29}
+  s.date = %q{2009-11-22}
   s.email = %q{grosser.michael@gmail.com}
   s.extra_rdoc_files = [
     "README.markdown"
@@ -28,7 +28,6 @@ Gem::Specification.new do |s|
      "lib/rpx_now/contacts_collection.rb",
      "lib/rpx_now/user_integration.rb",
      "lib/rpx_now/user_proxy.rb",
-     "rdoc/README.rdoc",
      "rpx_now.gemspec",
      "spec/fixtures/get_contacts_response.json",
      "spec/integration/mapping_spec.rb",
@@ -41,7 +40,6 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/grosser/rpx_now}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubyforge_project = %q{rpx-now}
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{Helper to simplify RPX Now user login/creation}
   s.test_files = [
