@@ -3,7 +3,7 @@ require 'spec/spec_helper'
 describe RPXNow::Api do
   describe 'ssl cert' do
     it "has an absolute path" do
-      RPXNow::Api::SSL_CERT[0..0].should == '/' #start with '/'
+      RPXNow::Api::SSL_CERT[0..0].should == File.expand_path( RPXNow::Api::SSL_CERT )[0..0] # start with '/' on *nix, drive letter on win
     end
 
     it "exists" do
