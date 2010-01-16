@@ -128,6 +128,7 @@ __[rpx_now_gem mailing list](http://groups.google.com/group/rpx_now_gem)__
  - [Amunds](http://github.com/Amunds)
  - [DBA](http://github.com/DBA)
  - [dbalatero](http://github.com/dbalatero)
+ - [Paul Gallagher](http://tardate.blogspot.com/)
  - [jackdempsey](http://jackndempsey.blogspot.com)
  - [Patrick Reagan (reagent)](http://sneaq.net)
  - [Joris Trooster (trooster)](http://www.interstroom.nl)

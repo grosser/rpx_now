@@ -1,3 +1,6 @@
+0.6.12
+-----
+ * url encode obstrusive popup code token-url
 0.6.0
 -----
  * removed optional api key as parameter: RPXNow.user_data(token, api_key, options) --> RPXNow.user_data(token, options), you may use :apiKey=>... instead
