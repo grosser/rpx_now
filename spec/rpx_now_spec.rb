@@ -112,9 +112,20 @@ describe RPXNow do
       options.should == {:xxx => 1}
     end
 
+    describe 'obstrusive' do
+      it "does not encode token_url for popup" do
+        expected = %Q(RPXNOW.token_url = 'http://fake.domain.com/')
+        RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/').should include(expected)
+      end
+      it "encodes token_url for unobtrusive fallback link" do
+        expected = %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v2/signin?token_url=http%3A%2F%2Ffake.domain.com%2F">sign on</a>)
+        RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/').should include(expected)
+      end
+    end
+    
     describe 'unobstrusive' do
-      it "can build an unobtrusive widget" do
-        expected = %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v2/signin?token_url=http://fake.domain.com/">sign on</a>)
+      it "can build an unobtrusive widget with encoded token_url" do
+        expected = %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v2/signin?token_url=http%3A%2F%2Ffake.domain.com%2F">sign on</a>)
         actual = RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/', :unobtrusive => true)
         actual.should == expected
       end
