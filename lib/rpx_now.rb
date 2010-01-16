@@ -1,8 +1,6 @@
 require 'rpx_now/api'
 require 'rpx_now/contacts_collection'
-
-require 'erb'
-include ERB::Util
+require 'cgi'
 
 module RPXNow
   extend self
@@ -108,7 +106,7 @@ module RPXNow
 
   def self.embed_params(url, options)
     {
-      :token_url => url_encode( url ),
+      :token_url => CGI::escape( url ),
       :language_preference => options[:language],
       :flags => options[:flags],
       :default_provider => options[:default_provider]
