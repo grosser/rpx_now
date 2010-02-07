@@ -31,9 +31,9 @@ Examples
 View
 ----
     #'mywebsite' is your subdomain/realm on RPX
-    <%=RPXNow.embed_code('mywebsite', url_for(:controller=>:session, :action=>:rpx_token))%>
+    <%=RPXNow.embed_code('mywebsite', url_for(:controller=>:session, :action=>:rpx_token, :only_path => false))%>
     OR
-    <%=RPXNow.popup_code('Login here...', 'mywebsite', url_for(:controller=>:session, :action=>:rpx_token), options)%>
+    <%=RPXNow.popup_code('Login here...', 'mywebsite', url_for(:controller=>:session, :action=>:rpx_token, :only_path => false), options)%>
 
 ###Options
 `:language=>'en'` rpx tries to detect the users language, but you may overwrite it [possible languages](https://rpxnow.com/docs#sign-in_localization)  
@@ -42,7 +42,7 @@ View
 
 ###Unobtrusive / JS-last
 `popup_code` can also be called with `:unobtrusive=>true` ( --> just link without javascript include).  
-To still get the normal popup add `RPXNow.popup_source('mywebsite', url_for(:controller=>:session, :action=>:rpx_token), [options])`.  
+To still get the normal popup add `RPXNow.popup_source('mywebsite', url_for(:controller=>:session, :action=>:rpx_token, :only_path => false), [options])`.  
 Options like :language / :flags should be given for both.
 
 environment.rb
