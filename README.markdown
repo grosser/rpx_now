@@ -28,6 +28,8 @@ Install
 Examples
 ========
 
+[Example application](http://github.com/grosser/rpx_now_example), go play around!
+
 View
 ----
     #'mywebsite' is your subdomain/realm on RPX
