@@ -18,7 +18,8 @@ module RPXNow
   def user_data(token, options={})
     begin
       data = Api.call("auth_info", options.merge(:token => token))
-      if block_given? then yield(data) else parse_user_data(data, options) end
+      result = (block_given? ? yield(data) : parse_user_data(data, options))
+      result.respond_to?(:with_indifferent_access) ? result.with_indifferent_access : result
     rescue ServerError
       return nil if $!.to_s=~/Data not found/
       raise
