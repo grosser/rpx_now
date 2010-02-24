@@ -13,7 +13,7 @@ module RPXNow
     private
 
     def parse_data(entry)
-      entry['emails'] = entry['emails'].map{|email| email['value']}
+      entry['emails'] = (entry['emails'] ? entry['emails'].map{|email| email['value']} : [])
       entry
     end
   end
