@@ -123,7 +123,11 @@ module RPXNow
     data[:name] = user_data['displayName'] || data[:username]
     data[:id] = user_data['primaryKey'] unless user_data['primaryKey'].to_s.empty?
     (options[:additional] || []).each do |key|
-      data[key] = user_data[key.to_s]
+      if key == :raw
+        data[key] = user_data
+      else
+        data[key] = user_data[key.to_s]
+      end
     end
     data
   end

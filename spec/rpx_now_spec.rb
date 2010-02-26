@@ -221,6 +221,11 @@ describe RPXNow do
       RPXNow::Api.should_receive(:request).and_return @response
       RPXNow.user_data('').should == expected
     end
+
+    it "adds raw if i want it" do
+      RPXNow::Api.should_receive(:request).and_return @response
+      RPXNow.user_data('',:additional => [:raw])[:raw]["verifiedEmail"].should == "grosser.michael@googlemail.com"
+    end
     
     it "adds a :id when primaryKey was returned" do
       @response_body['profile']['primaryKey'] = "2"
