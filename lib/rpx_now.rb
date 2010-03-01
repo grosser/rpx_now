@@ -60,8 +60,8 @@ module RPXNow
   end
   alias get_contacts contacts
 
-  # iframe for rpx login
-  # options: :width, :height, :language, :flags
+  # embedded rpx login (via iframe)
+  # options: :width, :height, :language, :flags, :api_version, :default_provider
   def embed_code(subdomain, url, options={})
     options = {:width => '400', :height => '240'}.merge(options)
     <<-EOF
@@ -72,7 +72,7 @@ module RPXNow
   end
 
   # popup window for rpx login
-  # options: :language / :flags / :unobtrusive
+  # options: :language, :flags, :unobtrusive, :api_version, :default_provider
   def popup_code(text, subdomain, url, options = {})
     if options[:unobtrusive]
       unobtrusive_popup_code(text, subdomain, url, options)
@@ -97,6 +97,12 @@ module RPXNow
         //]]>
       </script>
     EOF
+  end
+
+  # url for unobtrusive popup window
+  # options: :language, :flags, :api_version, :default_provider
+  def popup_url(subdomain, url, options={})
+    "#{Api.host(subdomain)}/openid/v#{extract_version(options)}/signin?#{embed_params(url, options)}"
   end
 
   def extract_version(options)
@@ -133,7 +139,7 @@ module RPXNow
   end
 
   def unobtrusive_popup_code(text, subdomain, url, options={})
-    %Q(<a class="rpxnow" href="#{Api.host(subdomain)}/openid/v#{extract_version(options)}/signin?#{embed_params(url, options)}">#{text}</a>)
+    %Q(<a class="rpxnow" href="#{popup_url(subdomain, url, options)}">#{text}</a>)
   end
 
   def obtrusive_popup_code(text, subdomain, url, options = {})
