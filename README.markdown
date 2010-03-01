@@ -131,6 +131,7 @@ __[rpx_now_gem mailing list](http://groups.google.com/group/rpx_now_gem)__
 
 ###Contributors
  - [Amunds](http://github.com/Amunds)
+ - [Bob Groeneveld](http://metathoughtfacility.blogspot.com)
  - [DBA](http://github.com/DBA)
  - [dbalatero](http://github.com/dbalatero)
  - [Paul Gallagher](http://tardate.blogspot.com/)
