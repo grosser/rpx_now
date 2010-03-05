@@ -34,15 +34,12 @@ module RPXNow
     return nil if $!.to_s=~/Data not found/
     raise
   end
-  
+
   # Post an activity update to the user's activity stream.
   # See more: https://rpxnow.com/docs#api_activity
-  def activity(identifier, activity_options)
-    options = {:identifier => identifier, :activity => activity_options}
-    data = Api.call("activity", options)
-  rescue ServerError
-    return nil if $!.to_s=~/Data not found/
-    raise
+  def activity(identifier, activity_options, options={})
+    options = options.merge(:identifier => identifier, :activity => activity_options.to_json)
+    Api.call("activity", options)
   end
 
   # maps an identifier to an primary-key (e.g. user.id)
