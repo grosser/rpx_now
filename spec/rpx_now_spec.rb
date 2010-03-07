@@ -296,6 +296,18 @@ describe RPXNow do
     end
   end
 
+  describe :activity do
+    it "does a api call with the right arguments" do
+      RPXNow::Api.should_receive(:request).with("/api/v2/activity", :identifier=>"identifier", :activity=>'{"test":"something"}', :apiKey=>API_KEY).and_return fake_response 
+      RPXNow.activity('identifier', :test => 'something')
+    end
+
+    it "can pass identifier/apiKey" do
+      RPXNow::Api.should_receive(:request).with("/api/v66666/activity", hash_including(:apiKey=>'MYKEY')).and_return fake_response
+      RPXNow.activity('identifier', {:test => 'something'}, :apiKey => 'MYKEY', :api_version => '66666')
+    end
+  end
+
   describe :parse_user_data do
     it "reads secondary names" do
       RPXNow.send(:parse_user_data,{'profile'=>{'preferredUsername'=>'1'}}, {})[:name].should == '1'
