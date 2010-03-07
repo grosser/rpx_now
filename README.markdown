@@ -86,10 +86,10 @@ Controller
 
 Advanced
 --------
-###Versions
+### Versions
     RPXNow.api_version = 2
 
-###Mappings
+### Mappings (PRX Plus/Pro)
 You can map your primary keys (e.g. user.id) to identifiers, so that  
 users can login to the same account with multiple identifiers.
     RPXNow.map(identifier, primary_key) #add a mapping
@@ -101,7 +101,7 @@ After a primary key is mapped to an identifier, when a user logs in with this id
 `RPXNow.user_data` will contain his `primaryKey` as `:id`.  
 A identifyer can only belong to one user (in doubt the last one it was mapped to)
 
-###User integration (e.g. ActiveRecord)
+### User integration (e.g. ActiveRecord)
     class User < ActiveRecord::Base
       include RPXNow::UserIntegration
     end
@@ -110,13 +110,23 @@ A identifyer can only belong to one user (in doubt the last one it was mapped to
     user.rpx.map(identifier) == RPXNow.map(identifier, user.id)
     user.rpx.unmap(identifier) == RPXNow.unmap(identifier, user.id)
 
-###Contacts (PRX Pro)
+### Contacts (PRX Pro)
 Retrieve all contacts for a given user:
     RPXNow.contacts(identifier).each {|c| puts "#{c['displayName']}: #{c['emails']}}
 
-###Status updates (PRX Pro)
+### Status updates (PRX Plus/Pro)
 Send a status update to provider (a tweet/facebook-status/...) :
     RPXNow.set_status(identifier, "I just registered at yourdomain.com ...")
+
+### Activity (RPX Plus/Pro)
+Post a users activity, on their e.g. Facebook profile, complete with images, titels, rating, additional media, customized links and so on ...
+    RPXNow.activity( identifier,
+      :url=>href, :action=>'Im loving my new', :user_generated_content=>'Im loving my new ... ',
+      :title=>product.title, :description=>product.description,
+      :action_links=>[{:text=>'view >>', :href=>product_url(product, :only_path => false)}],
+      :media=>[{:type=>:image, :src=>product.image_url, :href=>product_url(product, :only_path => false)}]
+    }
+
 
 TODO
 ====
