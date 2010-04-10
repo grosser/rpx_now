@@ -141,6 +141,7 @@ __[rpx_now_gem mailing list](http://groups.google.com/group/rpx_now_gem)__
  - [Joris Trooster (trooster)](http://www.interstroom.nl)
  - [Mick Staugaard (staugaard)](http://mick.staugaard.com/)
  - [Kasper Weibel](http://github.com/weibel)
+ - [Nicolas Alpi](http://www.notgeeklycorrect.com)
 
 [Michael Grosser](http://pragmatig.wordpress.com)  
 grosser.michael@gmail.com  
