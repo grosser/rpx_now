@@ -1,23 +1,19 @@
-Problem
-=======
- - OpenID is complex, limited and hard to use for users
- - Facebook / Twitter / Myspace / Google / MS-LiveId / AOL connections require different libraries and knowledge
- - Multiple heterogenouse providers are hard to map to a single user
+[RPX](http://rpxnow.com) allows users to login to your page through Facebook / Twitter / Myspace / Google / OpenId / MS-LiveId / AOL / ...
 
-Solution
-========
- - Use [RPX](http://rpxnow.com) for universal and usable user login
- - Use view/controller helpers for easy integration
+ - Simpler then OpenId/OAuth/xxx for developers AND users
+ - Publish user activity to facebook/twitter/myspace/.../-stream
+ - Returning users are greeted by their provider
 
-![Single Interface for all providers](https://rpxnow.com/images/how_diagram.png)
-![Visitors choose from providers they already have](https://rpxnow.com/images/6providers.png?2)
+![Single Interface for all providers](https://s3.amazonaws.com/static.rpxnow.com/rel/img/a481ed2afccd255350cccd738050f873.png)
+![Share comments and activities](https://s3.amazonaws.com/static.rpxnow.com/rel/img/50bdccdb32b6ae68d46908a531492b28.png)
+![Visitors choose from providers they already have](https://s3.amazonaws.com/static.rpxnow.com/rel/img/f4a6e65808eefcf8754588c71f84c142.png)
 
 Usage
 =====
  - Get an API key @ [RPX](http://rpxnow.com)
  - run [MIGRATION](http://github.com/grosser/rpx_now/raw/master/MIGRATION)
  - Build login view
- - Communicate with RPX API in controller to create or login User
+ - Receive user-data from RPX to create or login User
  - for more advanced features have a look at the [RPX API Docs](https://rpxnow.com/docs)
 
 Install
@@ -126,11 +122,6 @@ Post a users activity, on their e.g. Facebook profile, complete with images, tit
       :action_links=>[{:text=>'view >>', :href=>product_url(product, :only_path => false)}],
       :media=>[{:type=>:image, :src=>product.image_url, :href=>product_url(product, :only_path => false)}]
     }
-
-
-TODO
-====
- - add provider / credentials helpers ?
 
 
 Author
