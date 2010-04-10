@@ -222,9 +222,15 @@ describe RPXNow do
       RPXNow.user_data('').should == expected
     end
 
-    it "adds raw if i want it" do
+    it "deprecated: adds raw profile data if i want it" do
       RPXNow::Api.should_receive(:request).and_return @response
+      RPXNow.should_receive(:warn)
       RPXNow.user_data('',:additional => [:raw])[:raw]["verifiedEmail"].should == "grosser.michael@googlemail.com"
+    end
+
+    it "adds raw data if i want it" do
+      RPXNow::Api.should_receive(:request).and_return @response
+      RPXNow.user_data('',:additional => [:raw_response])[:raw_response]['profile']["verifiedEmail"].should == "grosser.michael@googlemail.com"
     end
     
     it "adds a :id when primaryKey was returned" do
@@ -263,9 +269,21 @@ describe RPXNow do
     
     it "can send additional parameters" do
       RPXNow::Api.should_receive(:request).
-        with(anything, hash_including(:extended => 'true')).
+        with(anything, hash_including(:extended => true)).
         and_return @response
-      RPXNow.user_data('',:extended=>'true')
+      RPXNow.user_data('', :extended=>true)
+    end
+
+    it "does not pass raw_response to RPX" do
+      RPXNow::Api.should_receive(:request).
+        with(anything, hash_not_including(:raw_response => true)).
+        and_return @response
+      RPXNow.user_data('', :raw_response=>true)
+    end
+
+    it "can return a raw_response" do
+      RPXNow::Api.should_receive(:request).and_return @response
+      RPXNow.user_data('', :raw_response=>true).should == @response_body.merge('stat' => 'ok')
     end
 
     # these 2 tests are kind of duplicates of the api_version/key tests,

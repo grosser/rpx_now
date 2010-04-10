@@ -16,14 +16,18 @@ module RPXNow
   # - complete/unclean response when block was given user_data{|response| ...; return hash }
   # - nil when token was invalid / data was not found
   def user_data(token, options={})
-    begin
-      data = Api.call("auth_info", options.merge(:token => token))
-      result = (block_given? ? yield(data) : parse_user_data(data, options))
-      result.respond_to?(:with_indifferent_access) ? result.with_indifferent_access : result
+    options = options.dup
+    return_raw = options.delete(:raw_response)
+
+    data = begin
+      Api.call("auth_info", options.merge(:token => token))
     rescue ServerError
       return nil if $!.to_s=~/Data not found/
       raise
     end
+
+    result = (block_given? ? yield(data) : (return_raw ? data : parse_user_data(data, options)))
+    result.respond_to?(:with_indifferent_access) ? result.with_indifferent_access : result
   end
 
   # set the users status
@@ -137,7 +141,10 @@ module RPXNow
     data[:id] = user_data['primaryKey'] unless user_data['primaryKey'].to_s.empty?
     (options[:additional] || []).each do |key|
       if key == :raw
+        warn "RPXNow :raw is deprecated, please use :raw_response + e.g. data['raw_response']['profile']['verifiedEmail']"
         data[key] = user_data
+      elsif key == :raw_response
+        data[key] = response
       else
         data[key] = user_data[key.to_s]
       end
