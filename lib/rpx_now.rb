@@ -139,12 +139,17 @@ module RPXNow
     data[:username] = user_data['preferredUsername'] || data[:email].to_s.sub(/@.*/,'')
     data[:name] = user_data['displayName'] || data[:username]
     data[:id] = user_data['primaryKey'] unless user_data['primaryKey'].to_s.empty?
-    (options[:additional] || []).each do |key|
+
+    additional = (options[:additional] || [])
+    additional << :extended if options[:extended]
+    additional.each do |key|
       if key == :raw
         warn "RPXNow :raw is deprecated, please use :raw_response + e.g. data['raw_response']['profile']['verifiedEmail']"
         data[key] = user_data
       elsif key == :raw_response
         data[key] = response
+      elsif key == :extended
+        data[key] = response.reject{|k,v| ['profile','stat'].include?(k) }
       else
         data[key] = user_data[key.to_s]
       end

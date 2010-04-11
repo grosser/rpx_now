@@ -267,11 +267,19 @@ describe RPXNow do
       RPXNow.user_data(''){|data| "x"}.should == 'x'
     end
     
-    it "can send additional parameters" do
+    it "can request extended data" do
       RPXNow::Api.should_receive(:request).
         with(anything, hash_including(:extended => true)).
         and_return @response
       RPXNow.user_data('', :extended=>true)
+    end
+
+    it "returns extended data as an additional field" do
+      @response_body['friends'] = {'x' => 1}
+      @response = fake_response(@response_body)
+      
+      RPXNow::Api.should_receive(:request).and_return @response
+      RPXNow.user_data('', :extended=>true)[:extended].should == {'friends' => {'x' => 1}}
     end
 
     it "does not pass raw_response to RPX" do

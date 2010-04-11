@@ -77,8 +77,8 @@ Controller
     # only raw data
     email = RPXNow.user_data(params[:token], :raw_response => true)['profile']['verifiedEmail']
 
-    # raw response with extended parameters (most users and APIs do not supply them)
-    RPXNow.user_data(params[:token], :extended => true, :raw_response => true)[ ...have a look at the RPX API DOCS... ]
+    # with extended info like friends, accessCredentials, portable contacts. (most Providers do not supply them)
+    RPXNow.user_data(params[:token], :extended => true)[:extended]['friends'][...have a look at the RPX API DOCS...]
 
 Advanced
 --------
