@@ -143,15 +143,16 @@ module RPXNow
     additional = (options[:additional] || [])
     additional << :extended if options[:extended]
     additional.each do |key|
-      if key == :raw
+      data[key] = case key
+      when :raw
         warn "RPXNow :raw is deprecated, please use :raw_response + e.g. data['raw_response']['profile']['verifiedEmail']"
-        data[key] = user_data
-      elsif key == :raw_response
-        data[key] = response
-      elsif key == :extended
-        data[key] = response.reject{|k,v| ['profile','stat'].include?(k) }
+        user_data
+      when :raw_response
+        response
+      when :extended
+        response.reject{|k,v| ['profile','stat'].include?(k) }
       else
-        data[key] = user_data[key.to_s]
+        user_data[key.to_s]
       end
     end
     data
