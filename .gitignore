@@ -3,3 +3,4 @@ pkg
 .*.swp
 .*.swo
 *.autotest
+.bundle
