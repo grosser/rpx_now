@@ -37,6 +37,7 @@ View
 `:language=>'en'` rpx tries to detect the users language, but you may overwrite it [possible languages](https://rpxnow.com/docs#sign-in_localization)  
 `:default_provider=>'google'` [possible default providers](https://rpxnow.com/docs#sign-in_default_provider)  
 `:flags=>'show_provider_list'` [possible flags](https://rpxnow.com/docs#sign-in_interface)  
+`:html => {:id => 'xxx'}` is added to the popup link (popup_code only)
 
 ###Unobtrusive / JS-last
 `popup_code` can also be called with `:unobtrusive=>true` ( --> just link without javascript include).  
@@ -142,7 +143,8 @@ __[rpx_now_gem mailing list](http://groups.google.com/group/rpx_now_gem)__
  - [Mick Staugaard (staugaard)](http://mick.staugaard.com/)
  - [Kasper Weibel](http://github.com/weibel)
  - [Nicolas Alpi](http://www.notgeeklycorrect.com)
+ - [Ladislav Martincik](http://martincik.com)
 
 [Michael Grosser](http://pragmatig.wordpress.com)  
 grosser.michael@gmail.com  
-Hereby placed under public domain, do what you want, just do not hold me accountable...  
+Hereby placed under public domain, do what you want, just do not hold me accountable...
