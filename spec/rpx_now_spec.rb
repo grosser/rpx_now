@@ -111,8 +111,13 @@ describe RPXNow do
       RPXNow.popup_code('a','b','c', options)
       options.should == {:xxx => 1}
     end
-    
-    it "does allow to add class HTML attribute" do
+
+    it "adds html params to link" do
+      options = {:html => {:id => "xxxx"}}
+      RPXNow.popup_code('a','b','c', options).should =~ /id="xxxx"/
+    end
+
+    it "adds rpxnow to given html class" do
       options = {:html => {:class => "c1 c2"}}
       RPXNow.popup_code('a','b','c', options).should =~ /class="rpxnow c1 c2"/
     end
