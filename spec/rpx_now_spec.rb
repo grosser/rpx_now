@@ -99,6 +99,10 @@ describe RPXNow do
     it "has a changeable height" do
       RPXNow.embed_code('xxx', 'my_url', :height => '500').should =~ /height:500px;/
     end
+    
+    it "has id on iframe" do
+      RPXNow.embed_code('xxx','my_url').should =~ /id=\"rpx_now_embed\"/
+    end
   end
 
   describe :popup_code do
