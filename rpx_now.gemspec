@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rpx_now}
-  s.version = "0.6.20"
+  s.version = "0.6.21"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
-  s.date = %q{2010-04-27}
+  s.date = %q{2010-05-29}
   s.email = %q{grosser.michael@gmail.com}
   s.extra_rdoc_files = [
     "README.markdown"
@@ -44,11 +44,11 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.6}
   s.summary = %q{Helper to simplify RPX Now user login/creation}
   s.test_files = [
-    "spec/spec_helper.rb",
-     "spec/rpx_now/contacts_collection_spec.rb",
+    "spec/rpx_now/contacts_collection_spec.rb",
      "spec/rpx_now/api_spec.rb",
      "spec/rpx_now/user_proxy_spec.rb",
      "spec/integration/mapping_spec.rb",
+     "spec/spec_helper.rb",
      "spec/rpx_now_spec.rb"
   ]
 
