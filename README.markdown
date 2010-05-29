@@ -143,6 +143,7 @@ __[rpx_now_gem mailing list](http://groups.google.com/group/rpx_now_gem)__
  - [Kasper Weibel](http://github.com/weibel)
  - [Nicolas Alpi](http://www.notgeeklycorrect.com)
  - [Ladislav Martincik](http://martincik.com)
+ - [Ben Aldred](http://github.com/benaldred)
 
 [Michael Grosser](http://pragmatig.wordpress.com)  
 grosser.michael@gmail.com  
