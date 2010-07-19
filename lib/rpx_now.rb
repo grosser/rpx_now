@@ -20,20 +20,33 @@ module RPXNow
     return_raw = options.delete(:raw_response)
 
     data = begin
-      Api.call("auth_info", options.merge(:token => token))
+      auth_info(token, options)
     rescue ServerError
       return nil if $!.to_s=~/Data not found/
       raise
     end
 
     result = (block_given? ? yield(data) : (return_raw ? data : parse_user_data(data, options)))
-    result.respond_to?(:with_indifferent_access) ? result.with_indifferent_access : result
+    with_indifferent_access(result)
+  end
+
+  # same data as user_data, but without any kind of post-processing
+  def auth_info(token, options={})
+    data = Api.call("auth_info", options.merge(:token => token))
+    with_indifferent_access(data)
+  end
+
+  # same as for auth_info if Offline Profile Access is enabled,
+  # but can be called at any time and does not need a token / does not expire
+  def get_user_data(identifier, options={})
+    data = Api.call("get_user_data", options.merge(:identifier => identifier))
+    with_indifferent_access(data)
   end
 
   # set the users status
   def set_status(identifier, status, options={})
     options = options.merge(:identifier => identifier, :status => status)
-    data = Api.call("set_status", options)
+    Api.call("set_status", options)
   rescue ServerError
     return nil if $!.to_s=~/Data not found/
     raise
@@ -163,7 +176,7 @@ module RPXNow
     html_options = options.delete(:html) || {}
     html_options[:class] = "rpxnow #{html_options[:class]}".strip
     html_options[:href] ||= popup_url(subdomain, url, options)
-    html_options = html_options.map{|k,v| %{#{k}="#{v}"}}
+    html_options = html_options.sort_by{|k,v|k.to_s}.map{|k,v| %{#{k}="#{v}"}}
 
     %{<a #{html_options.join(' ')}>#{text}</a>}
   end
@@ -171,6 +184,10 @@ module RPXNow
   def obtrusive_popup_code(text, subdomain, url, options = {})
     unobtrusive_popup_code(text, subdomain, url, options) +
     popup_source(subdomain, url, options)
+  end
+
+  def with_indifferent_access(hash)
+    hash.respond_to?(:with_indifferent_access) ? hash.with_indifferent_access : hash
   end
 
   class ServerError < RuntimeError; end #backwards compatibility / catch all

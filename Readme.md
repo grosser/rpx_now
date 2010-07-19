@@ -123,6 +123,14 @@ Post a users activity, on their e.g. Facebook profile, complete with images, tit
       :media=>[{:type=>:image, :src=>product.image_url, :href=>product_url(product, :only_path => false)}]
     }
 
+### Offline user data access (RPX Plus/Pro)
+Same response as auth_info but can be called with a identifier at any time.
+Offline Profile Access must be enabled.
+    RPXNow.get_user_data(identifier, :extended => true)
+
+### Auth info
+Same response as user_data with :raw_response, but without any kind of failure detection or post processing.
+    RPXNow.auth_info(params[:token])
 
 Author
 ======
