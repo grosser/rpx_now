@@ -5,22 +5,19 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rpx_now}
-  s.version = "0.6.21"
+  s.version = "0.6.22"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
-  s.date = %q{2010-05-29}
+  s.date = %q{2010-07-19}
   s.email = %q{grosser.michael@gmail.com}
-  s.extra_rdoc_files = [
-    "README.markdown"
-  ]
   s.files = [
     ".gitignore",
      "CHANGELOG",
      "Gemfile",
      "MIGRATION",
-     "README.markdown",
      "Rakefile",
+     "Readme.md",
      "VERSION",
      "certs/ssl_cert.pem",
      "init.rb",
