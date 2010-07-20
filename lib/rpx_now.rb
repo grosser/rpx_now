@@ -90,7 +90,7 @@ module RPXNow
     options = {:width => '400', :height => '240'}.merge(options)
     <<-EOF
       <iframe src="#{Api.host(subdomain)}/openid/embed?#{embed_params(url, options)}"
-        scrolling="no" frameBorder="no" style="width:#{options[:width]}px;height:#{options[:height]}px;" id="rpx_now_embed">
+        scrolling="no" frameBorder="no" style="width:#{options[:width]}px;height:#{options[:height]}px;" id="rpx_now_embed" allowtransparency="allowtransparency">
       </iframe>
     EOF
   end
