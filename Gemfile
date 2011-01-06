@@ -1,9 +1,11 @@
 # not used, just for hardcore-bundlers
-source :gemcutter
+source :rubygems
 
-gem "rake"
-gem "json"
-gem "jeweler"
+group :dev do
+  gem "rake"
+  gem "json"
+  gem "jeweler"
+end
 
 group :test do
   gem "rspec"
