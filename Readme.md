@@ -33,14 +33,14 @@ View
     <%=RPXNow.popup_code('Login here...', 'My-Rpx-Domain', url_for(:controller=>:session, :action=>:rpx_token, :only_path => false), options)%>
 
 ###Options
-`:language=>'en'` rpx tries to detect the users language, but you may overwrite it [possible languages](https://rpxnow.com/docs#sign-in_localization)  
-`:default_provider=>'google'` [possible default providers](https://rpxnow.com/docs#sign-in_default_provider)  
-`:flags=>'show_provider_list'` [possible flags](https://rpxnow.com/docs#sign-in_interface)  
+`:language=>'en'` rpx tries to detect the users language, but you may overwrite it [possible languages](https://rpxnow.com/docs#sign-in_localization)
+`:default_provider=>'google'` [possible default providers](https://rpxnow.com/docs#sign-in_default_provider)
+`:flags=>'show_provider_list'` [possible flags](https://rpxnow.com/docs#sign-in_interface)
 `:html => {:id => 'xxx'}` is added to the popup link (popup_code only)
 
 ###Unobtrusive / JS-last
-`popup_code` can also be called with `:unobtrusive=>true` ( --> just link without javascript include).  
-To still get the normal popup add `RPXNow.popup_source('My-Rpx-Domain', url_for(:controller=>:session, :action=>:rpx_token, :only_path => false), [options])`.  
+`popup_code` can also be called with `:unobtrusive=>true` ( --> just link without javascript include).
+To still get the normal popup add `RPXNow.popup_source('My-Rpx-Domain', url_for(:controller=>:session, :action=>:rpx_token, :only_path => false), [options])`.
 Options like :language / :flags should be given for both.
 
 environment.rb
@@ -86,15 +86,15 @@ Advanced
     RPXNow.api_version = 2
 
 ### Mappings (PRX Plus/Pro)
-You can map your primary keys (e.g. user.id) to identifiers, so that  
+You can map your primary keys (e.g. user.id) to identifiers, so that<br/>
 users can login to the same account with multiple identifiers.
     RPXNow.map(identifier, primary_key) #add a mapping
     RPXNow.unmap(identifier, primary_key) #remove a mapping
     RPXNow.mappings(primary_key) # [identifier1,identifier2,...]
     RPXNow.all_mappings # [["1",['google.com/dsdas','yahoo.com/asdas']], ["2",[...]], ... ]
 
-After a primary key is mapped to an identifier, when a user logs in with this identifier,  
-`RPXNow.user_data` will contain his `primaryKey` as `:id`.  
+After a primary key is mapped to an identifier, when a user logs in with this identifier,
+`RPXNow.user_data` will contain his `primaryKey` as `:id`.
 A identifyer can only belong to one user (in doubt the last one it was mapped to)
 
 ### User integration (e.g. ActiveRecord)
@@ -124,7 +124,7 @@ Post a users activity, on their e.g. Facebook profile, complete with images, tit
     }
 
 ### Offline user data access (RPX Plus/Pro)
-Same response as auth_info but can be called with a identifier at any time.
+Same response as auth_info but can be called with a identifier at any time.<br/>
 Offline Profile Access must be enabled.
     RPXNow.get_user_data(identifier, :extended => true)
 
@@ -154,6 +154,6 @@ __[rpx_now_gem mailing list](http://groups.google.com/group/rpx_now_gem)__
  - [Ben Aldred](http://github.com/benaldred)
  - [Casper Fabricius](http://casperfabricius.com)
 
-[Michael Grosser](http://pragmatig.wordpress.com)  
-grosser.michael@gmail.com  
+[Michael Grosser](http://grosser.it)<br/>
+michael@grosser.it<br/>
 Hereby placed under public domain, do what you want, just do not hold me accountable...
