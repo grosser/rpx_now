@@ -26,23 +26,6 @@ Examples
 
 [Example application](http://github.com/grosser/rpx_now_example), go play around!
 
-View
-----
-    <%=RPXNow.embed_code('My-Rpx-Domain', url_for(:controller=>:session, :action=>:rpx_token, :only_path => false))%>
-    OR
-    <%=RPXNow.popup_code('Login here...', 'My-Rpx-Domain', url_for(:controller=>:session, :action=>:rpx_token, :only_path => false), options)%>
-
-###Options
-`:language=>'en'` rpx tries to detect the users language, but you may overwrite it [possible languages](https://rpxnow.com/docs#sign-in_localization)
-`:default_provider=>'google'` [possible default providers](https://rpxnow.com/docs#sign-in_default_provider)
-`:flags=>'show_provider_list'` [possible flags](https://rpxnow.com/docs#sign-in_interface)
-`:html => {:id => 'xxx'}` is added to the popup link (popup_code only)
-
-###Unobtrusive / JS-last
-`popup_code` can also be called with `:unobtrusive=>true` ( --> just link without javascript include).
-To still get the normal popup add `RPXNow.popup_source('My-Rpx-Domain', url_for(:controller=>:session, :action=>:rpx_token, :only_path => false), [options])`.
-Options like :language / :flags should be given for both.
-
 environment.rb
 --------------
     Rails::Initializer.run do |config|
@@ -56,6 +39,8 @@ environment.rb
 
 Controller
 ----------
+This example uses the SessionsController, if you dont have one built it and add routes(rpx_token is a post request)
+
     skip_before_filter :verify_authenticity_token, :only => [:rpx_token] # RPX does not pass Rails form tokens...
 
     # user_data
@@ -79,6 +64,24 @@ Controller
 
     # with extended info like friends, accessCredentials, portable contacts. (most Providers do not supply them)
     RPXNow.user_data(params[:token], :extended => true)[:extended]['friends'][...have a look at the RPX API DOCS...]
+
+View
+----
+
+    <%=RPXNow.embed_code('My-Rpx-Domain', url_for(:controller=>:session, :action=>:rpx_token, :only_path => false))%>
+    OR
+    <%=RPXNow.popup_code('Login here...', 'My-Rpx-Domain', url_for(:controller=>:session, :action=>:rpx_token, :only_path => false), options)%>
+
+###Options
+`:language=>'en'` rpx tries to detect the users language, but you may overwrite it [possible languages](https://rpxnow.com/docs#sign-in_localization)
+`:default_provider=>'google'` [possible default providers](https://rpxnow.com/docs#sign-in_default_provider)
+`:flags=>'show_provider_list'` [possible flags](https://rpxnow.com/docs#sign-in_interface)
+`:html => {:id => 'xxx'}` is added to the popup link (popup_code only)
+
+###Unobtrusive / JS-last
+`popup_code` can also be called with `:unobtrusive=>true` ( --> just link without javascript include).
+To still get the normal popup add `RPXNow.popup_source('My-Rpx-Domain', url_for(:controller=>:session, :action=>:rpx_token, :only_path => false), [options])`.
+Options like :language / :flags should be given for both.
 
 Advanced
 --------
