@@ -141,7 +141,7 @@ Author
 __[rpx_now_gem mailing list](http://groups.google.com/group/rpx_now_gem)__
 
 
-###Contributors
+### [Contributors](http://github.com/grosser/rpx_now/contributors)
  - [Amunds](http://github.com/Amunds)
  - [Bob Groeneveld](http://metathoughtfacility.blogspot.com)
  - [DBA](http://github.com/DBA)
@@ -156,6 +156,7 @@ __[rpx_now_gem mailing list](http://groups.google.com/group/rpx_now_gem)__
  - [Ladislav Martincik](http://martincik.com)
  - [Ben Aldred](http://github.com/benaldred)
  - [Casper Fabricius](http://casperfabricius.com)
+ - [Avi Flombaum](http://www.aviflombaum.com)
 
 [Michael Grosser](http://grosser.it)<br/>
 michael@grosser.it<br/>
