@@ -13,11 +13,8 @@ describe RPXNow do
   end
   
   describe :domain= do
-    before do
-      RPXNow.domain='domain.com'
-    end
-    
     it "is stored" do
+      RPXNow.domain = 'domain.com'
       RPXNow.domain.should == 'domain.com'
     end
   end

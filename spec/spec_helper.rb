@@ -8,7 +8,7 @@ DOMAIN = RPXNow.domain
 
 # ---- rspec
 RSpec.configure do |config|
-  config.before :each do
+  config.before do
     RPXNow.api_key = API_KEY
     RPXNow.api_version = API_VERSION
     RPXNow.domain = DOMAIN
