@@ -8,7 +8,6 @@ module RPXNow
   # - parse response
   # - handle server errors
   class Api
-    HOST = 'rpxnow.com'
     SSL_CERT = File.join(File.dirname(__FILE__), '..', '..', 'certs', 'ssl_cert.pem')
 
     def self.call(method, data)
@@ -23,9 +22,9 @@ module RPXNow
 
     def self.host(subdomain=nil)
       if subdomain
-        "https://#{subdomain}.#{Api::HOST}"
+        "https://#{subdomain}.#{RPXNow.domain}"
       else
-        "https://#{Api::HOST}"
+        "https://#{RPXNow.domain}"
       end
     end
 
@@ -49,7 +48,7 @@ module RPXNow
     end
 
     def self.client
-      client = Net::HTTP.new(HOST, 443)
+      client = Net::HTTP.new(RPXNow.domain, 443)
       client.use_ssl = true
       client.ca_file = SSL_CERT
       client.verify_mode = OpenSSL::SSL::VERIFY_PEER
