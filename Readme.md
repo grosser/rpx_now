@@ -88,6 +88,9 @@ Advanced
 ### Versions
     RPXNow.api_version = 2
 
+### Custom domain (PRX Plus/Pro)
+    RPXNow.domain = 'other-domain.com'
+
 ### Mappings (PRX Plus/Pro)
 You can map your primary keys (e.g. user.id) to identifiers, so that<br/>
 users can login to the same account with multiple identifiers.
