@@ -122,12 +122,13 @@ Send a status update to provider (a tweet/facebook-status/...) :
 
 ### Activity (RPX Plus/Pro)
 Post a users activity, on their e.g. Facebook profile, complete with images, titels, rating, additional media, customized links and so on ...
+
     RPXNow.activity( identifier,
-      :url=>href, :action=>'Im loving my new', :user_generated_content=>'Im loving my new ... ',
-      :title=>product.title, :description=>product.description,
-      :action_links=>[{:text=>'view >>', :href=>product_url(product, :only_path => false)}],
-      :media=>[{:type=>:image, :src=>product.image_url, :href=>product_url(product, :only_path => false)}]
-    }
+      :url => href, :action => 'Im loving my new', :user_generated_content => 'Im loving my new ... ',
+      :title => product.title, :description => product.description,
+      :action_links => [{:text => 'view >>', :href => product_url(product, :only_path => false)}],
+      :media => [{:type => :image, :src => product.image_url, :href => product_url(product, :only_path => false)}]
+    )
 
 ### Offline user data access (RPX Plus/Pro)
 Same response as auth_info but can be called with a identifier at any time.<br/>
