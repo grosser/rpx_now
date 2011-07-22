@@ -1,8 +1,10 @@
-[RPX](http://rpxnow.com) allows users to login to your page through Facebook / Twitter / Myspace / Google / OpenId / MS-LiveId / AOL / ...
+[Janrain Engage](http://www.janrain.com/products/engage) (formerly known as RPXNow):
 
+ - Login to your page through Facebook / Twitter / Myspace / Google / OpenId / MS-LiveId / AOL / ...
  - Simpler then OpenId/OAuth/xxx for developers AND users
- - Publish user activity to facebook/twitter/myspace/.../-stream
- - Returning users are greeted by their provider
+ - Publish user activity to facebook/twitter/myspace/.../-stream via the same API
+ - Returning users are greeted by their choosen provider
+ - Free for up to 2500 accounts/year (above 5k it gets [expensive](http://www.janrain.com/products/engage/pricing)...)
 
 ![Single Interface for all providers](https://s3.amazonaws.com/static.rpxnow.com/rel/img/a481ed2afccd255350cccd738050f873.png)
 ![Share comments and activities](https://s3.amazonaws.com/static.rpxnow.com/rel/img/50bdccdb32b6ae68d46908a531492b28.png)
@@ -10,15 +12,15 @@
 
 Usage
 =====
- - Get an API key @ [RPX](http://rpxnow.com)
+ - Get an API key @ [Janrain Engage](http://www.janrain.com/products/engage)
  - run [MIGRATION](http://github.com/grosser/rpx_now/raw/master/MIGRATION)
  - Build login view
- - Receive user-data from RPX to create or login User
- - for more advanced features have a look at the [RPX API Docs](https://rpxnow.com/docs)
+ - Receive user-data from Janrain to create or login User
+ - for more advanced features have a look at the [Janrain Engage API Docs](http://documentation.janrain.com)
 
 Install
 =======
- - As Rails plugin: `script/plugin install git://github.com/grosser/rpx_now.git `
+ - As Rails plugin: `rails plugin install git://github.com/grosser/rpx_now.git`
  - As gem: `sudo gem install rpx_now`
 
 Examples
@@ -28,14 +30,8 @@ Examples
 
 environment.rb
 --------------
-    Rails::Initializer.run do |config|
-      config.gem "rpx_now"
-      ...
 
-      config.after_initialize do # so rake gems:install works
-        RPXNow.api_key = "YOU RPX API KEY"
-      end
-    end
+    RPXNow.api_key = "YOU RPX API KEY"
 
 Controller
 ----------
@@ -68,19 +64,19 @@ This example uses the SessionsController, if you dont have one built it and add 
 View
 ----
 
-    <%=RPXNow.embed_code('My-Rpx-Domain', url_for(:controller=>:session, :action=>:rpx_token, :only_path => false))%>
+    <%=RPXNow.embed_code('My-Rpx-Domain', url_for(:controller => :session, :action => :rpx_token, :only_path => false))%>
     OR
-    <%=RPXNow.popup_code('Login here...', 'My-Rpx-Domain', url_for(:controller=>:session, :action=>:rpx_token, :only_path => false), options)%>
+    <%=RPXNow.popup_code('Login here...', 'My-Rpx-Domain', url_for(:controller => :session, :action => :rpx_token, :only_path => false), options)%>
 
 ###Options
-`:language=>'en'` rpx tries to detect the users language, but you may overwrite it [possible languages](https://rpxnow.com/docs#sign-in_localization)
-`:default_provider=>'google'` [possible default providers](https://rpxnow.com/docs#sign-in_default_provider)
-`:flags=>'show_provider_list'` [possible flags](https://rpxnow.com/docs#sign-in_interface)
+`:language => 'en'` janrain tries to detect the users language, but you may overwrite it [possible languages](http://documentation.janrain.com/engage/widgets/localization)<br/>
+`:default_provider => 'google'` [possible default providers](http://documentation.janrain.com/engage/widgets/sign-in#TOC-Default-Provider)<br/>
+`:flags => 'show_provider_list'` [possible flags](http://documentation.janrain.com/engage/widgets/sign-in)<br/>
 `:html => {:id => 'xxx'}` is added to the popup link (popup_code only)
 
 ###Unobtrusive / JS-last
-`popup_code` can also be called with `:unobtrusive=>true` ( --> just link without javascript include).
-To still get the normal popup add `RPXNow.popup_source('My-Rpx-Domain', url_for(:controller=>:session, :action=>:rpx_token, :only_path => false), [options])`.
+`popup_code` can also be called with `:unobtrusive => true` ( --> just link without javascript include).
+To still get the normal popup add `RPXNow.popup_source('My-Rpx-Domain', url_for(:controller => :session, :action => :rpx_token, :only_path => false), [options])`<br/>
 Options like :language / :flags should be given for both.
 
 Advanced
@@ -88,10 +84,10 @@ Advanced
 ### Versions
     RPXNow.api_version = 2
 
-### Custom domain (PRX Plus/Pro)
+### Custom domain (Plus/Pro)
     RPXNow.domain = 'other-domain.com'
 
-### Mappings (PRX Plus/Pro)
+### Mappings (Plus/Pro)
 You can map your primary keys (e.g. user.id) to identifiers, so that<br/>
 users can login to the same account with multiple identifiers.
 
@@ -113,15 +109,15 @@ A identifyer can only belong to one user (in doubt the last one it was mapped to
     user.rpx.map(identifier) == RPXNow.map(identifier, user.id)
     user.rpx.unmap(identifier) == RPXNow.unmap(identifier, user.id)
 
-### Contacts (PRX Pro)
+### Contacts (Pro)
 Retrieve all contacts for a given user:
     RPXNow.contacts(identifier).each {|c| puts "#{c['displayName']}: #{c['emails']}}
 
-### Status updates (PRX Pro)
+### Status updates (Pro)
 Send a status update to provider (a tweet/facebook-status/...) :
     RPXNow.set_status(identifier, "I just registered at yourdomain.com ...")
 
-### Activity (RPX Pro)
+### Activity (Pro)
 Post a users activity, on their e.g. Facebook profile, complete with images, titels, rating, additional media, customized links and so on ...
 
     RPXNow.activity( identifier,
@@ -131,9 +127,10 @@ Post a users activity, on their e.g. Facebook profile, complete with images, tit
       :media => [{:type => :image, :src => product.image_url, :href => product_url(product, :only_path => false)}]
     )
 
-### Offline user data access (RPX Plus/Pro)
+### Offline user data access (Plus/Pro)
 Same response as auth_info but can be called with a identifier at any time.<br/>
 Offline Profile Access must be enabled.
+
     RPXNow.get_user_data(identifier, :extended => true)
 
 ### Auth info
