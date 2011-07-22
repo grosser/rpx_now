@@ -94,6 +94,7 @@ Advanced
 ### Mappings (PRX Plus/Pro)
 You can map your primary keys (e.g. user.id) to identifiers, so that<br/>
 users can login to the same account with multiple identifiers.
+
     RPXNow.map(identifier, primary_key) #add a mapping
     RPXNow.unmap(identifier, primary_key) #remove a mapping
     RPXNow.mappings(primary_key) # [identifier1,identifier2,...]
@@ -116,11 +117,11 @@ A identifyer can only belong to one user (in doubt the last one it was mapped to
 Retrieve all contacts for a given user:
     RPXNow.contacts(identifier).each {|c| puts "#{c['displayName']}: #{c['emails']}}
 
-### Status updates (PRX Plus/Pro)
+### Status updates (PRX Pro)
 Send a status update to provider (a tweet/facebook-status/...) :
     RPXNow.set_status(identifier, "I just registered at yourdomain.com ...")
 
-### Activity (RPX Plus/Pro)
+### Activity (RPX Pro)
 Post a users activity, on their e.g. Facebook profile, complete with images, titels, rating, additional media, customized links and so on ...
 
     RPXNow.activity( identifier,
