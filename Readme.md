@@ -1,3 +1,8 @@
+Modifications
+=============
+
+ - IE8 bugfix: "undefined RPXNOW" (jQuery solution)
+
 [Janrain Engage](http://www.janrain.com/products/engage) (formerly known as RPXNow):
 
  - Login to your page through Facebook / Twitter / Myspace / Google / OpenId / MS-LiveId / AOL / ...

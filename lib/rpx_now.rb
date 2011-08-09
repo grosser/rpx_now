@@ -115,12 +115,14 @@ module RPXNow
       <script src="#{Api.host}/openid/v#{extract_version(options)}/widget" type="text/javascript"></script>
       <script type="text/javascript">
         //<![CDATA[
-        RPXNOW.token_url = '#{url}';
-        RPXNOW.realm = '#{subdomain}';
-        RPXNOW.overlay = true;
-        #{ "RPXNOW.language_preference = '#{options[:language]}';" if options[:language] }
-        #{ "RPXNOW.default_provider = '#{options[:default_provider]}';" if options[:default_provider] }
-        #{ "RPXNOW.flags = '#{options[:flags]}';" if options[:flags] }
+        $(function () {
+          RPXNOW.token_url = '#{url}';
+          RPXNOW.realm = '#{subdomain}';
+          RPXNOW.overlay = true;
+          #{ "RPXNOW.language_preference = '#{options[:language]}';" if options[:language] }
+          #{ "RPXNOW.default_provider = '#{options[:default_provider]}';" if options[:default_provider] }
+          #{ "RPXNOW.flags = '#{options[:flags]}';" if options[:flags] }
+        });
         //]]>
       </script>
     EOF
