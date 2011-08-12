@@ -1,7 +1,7 @@
 Modifications
 =============
 
- - IE8 bugfix: "undefined RPXNOW" (jQuery solution)
+ - IE8 bugfix: "undefined RPXNOW"
 
 [Janrain Engage](http://www.janrain.com/products/engage) (formerly known as RPXNow):
 

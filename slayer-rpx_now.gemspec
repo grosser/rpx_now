@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{slayer-rpx_now}
-  s.version = "0.6.24"
+  s.version = "0.6.25"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser", "Vlad Moskovets"]
-  s.date = %q{2011-08-09}
-  s.email = %q{devvlad@gmail.com}
+  s.date = %q{2011-08-12}
+  s.email = %q{github@vlad.org.ua}
   s.files = [
     ".gitignore",
      "CHANGELOG",
@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
      "lib/rpx_now/user_integration.rb",
      "lib/rpx_now/user_proxy.rb",
      "rpx_now.gemspec",
+     "slayer-rpx_now.gemspec",
      "spec/fixtures/get_contacts_response.json",
      "spec/integration/mapping_spec.rb",
      "spec/rpx_now/api_spec.rb",
