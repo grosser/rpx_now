@@ -8,11 +8,11 @@ begin
   require 'jeweler'
 
   Jeweler::Tasks.new do |gem|
-    gem.name = 'rpx_now'
+    gem.name = 'slayer-rpx_now'
     gem.summary = "Helper to simplify RPX Now user login/creation"
-    gem.email = "grosser.michael@gmail.com"
-    gem.homepage = "http://github.com/grosser/#{gem.name}"
-    gem.authors = ["Michael Grosser"]
+    gem.email = "github@vlad.org.ua"
+    gem.homepage = "http://github.com/slayer/#{gem.name}"
+    gem.authors = ["Michael Grosser", "Vlad Moskovets"]
     gem.add_dependency ['json_pure']
   end
 
