@@ -5,3 +5,4 @@ pkg
 *.autotest
 .bundle
 .rvmrc
+Gemfile.lock
