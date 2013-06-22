@@ -20,8 +20,7 @@ Usage
 
 Install
 =======
- - As Rails plugin: `rails plugin install git://github.com/grosser/rpx_now.git`
- - As gem: `sudo gem install rpx_now`
+`gem install rpx_now`
 
 Examples
 ========
@@ -164,6 +163,7 @@ __[rpx_now_gem mailing list](http://groups.google.com/group/rpx_now_gem)__
  - [Ben Aldred](http://github.com/benaldred)
  - [Casper Fabricius](http://casperfabricius.com)
  - [Avi Flombaum](http://www.aviflombaum.com)
+ - [Paul Gallagher](https://github.com/tardate)
 
 [Michael Grosser](http://grosser.it)<br/>
 michael@grosser.it<br/>
