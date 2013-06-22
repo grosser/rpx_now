@@ -119,98 +119,128 @@ describe RPXNow do
   end
 
   describe :popup_code do
-    it "defaults to obtrusive output" do
-      RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/').should =~ /script src=/
-    end
+    let(:text) { 'sign on' }
+    let(:subdomain) { 'subdomain' }
+    let(:url) { 'http://fake.domain.com/' }
+    let(:options) { {} }
 
-    it "does not change supplied options" do
-      options = {:xxx => 1}
-      RPXNow.popup_code('a','b','c', options)
-      options.should == {:xxx => 1}
-    end
+    context 'when obtrusive (default)' do
+      subject { RPXNow.popup_code(text, subdomain, url, options ) }
 
-    it "adds html params to link" do
-      options = {:html => {:id => "xxxx"}}
-      RPXNow.popup_code('a','b','c', options).should =~ /id="xxxx"/
-    end
+      it "defaults to obtrusive output" do
+         should =~ /script src=/
+      end
 
-    it "adds rpxnow to given html class" do
-      options = {:html => {:class => "c1 c2"}}
-      RPXNow.popup_code('a','b','c', options).should =~ /class="rpxnow c1 c2"/
-    end
+      it "does not change supplied options" do
+        options = {:xxx => 1}
+        RPXNow.popup_code('a','b','c', options)
+        options.should == {:xxx => 1}
+      end
 
-    describe 'obstrusive' do
+      context "with html link id specified" do
+        let(:options) { {:html => {:id => "xxxx"}} }
+        it { should =~ /id="xxxx"/ }
+      end
+
+      context "with html link class specified" do
+        let(:options) { {:html => {:class => "c1 c2"}} }
+        it { should =~ /class="rpxnow c1 c2"/ }
+      end
+
       it "does not encode token_url for popup" do
         expected = %Q(RPXNOW.token_url = 'http://fake.domain.com/')
-        RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/').should include(expected)
+        should include(expected)
       end
+
       it "encodes token_url for unobtrusive fallback link" do
         expected = %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v2/signin?token_url=http%3A%2F%2Ffake.domain.com%2F">sign on</a>)
-        RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/').should include(expected)
+        should include(expected)
       end
+
+      context "with api_version specified" do
+        let(:options) { {:api_version => 300} }
+        it { should include("openid/v300/signin?") }
+      end
+
+      it "defaults to widget version 2" do
+        should =~ %r(/openid/v2/signin)
+      end
+
+      describe 'language' do
+        it "defaults to no language" do
+          should_not =~ /RPXNOW.language_preference/
+        end
+        context "when specified" do
+          let(:options) { {:language=>'de'} }
+          it { should =~ /RPXNOW.language_preference = 'de'/ }
+        end
+      end
+
+      describe 'flags' do
+        it "defaults to no language" do
+          should_not =~ /RPXNOW.flags/
+        end
+        context "when specified" do
+          let(:options) { {:flags=>'test'} }
+          it { should =~ /RPXNOW.flags = 'test'/ }
+        end
+      end
+
+      describe 'default_provider' do
+        it "defaults to no provider" do
+          should_not =~ /RPXNOW.default_provider/
+        end
+        context "when specified" do
+          let(:options) { {:default_provider=>'test'} }
+          it { should =~ /RPXNOW.default_provider = 'test'/ }
+        end
+      end
+
     end
 
-    describe 'unobstrusive' do
+    context 'when unobtrusive' do
+      subject { RPXNow.popup_code(text, subdomain, url, {:unobtrusive => true}.merge(options) ) }
+
       it "can build an unobtrusive widget with encoded token_url" do
-        expected = %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v2/signin?token_url=http%3A%2F%2Ffake.domain.com%2F">sign on</a>)
-        actual = RPXNow.popup_code('sign on', 'subdomain', 'http://fake.domain.com/', :unobtrusive => true)
-        actual.should == expected
+        should == %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v2/signin?token_url=http%3A%2F%2Ffake.domain.com%2F">sign on</a>)
       end
 
-      it "can change api version" do
-        RPXNow.popup_code('x', 'y', 'z', :unobtrusive => true, :api_version => 'XX').should include("openid/vXX/signin?")
+      context "with api_version specified" do
+        let(:options) { {:api_version => 'XX'} }
+        it { should include("openid/vXX/signin?") }
       end
 
-      it "can change language" do
-        RPXNow.popup_code('x', 'y', 'z', :unobtrusive => true, :language => 'XX').should include("language_preference=XX")
+      describe 'language' do
+        it "defaults to no language" do
+          should_not include('language_preference')
+        end
+        context "when specified" do
+          let(:options) { {:language=>'de'} }
+          it { should include("language_preference=de") }
+        end
       end
 
-      it "can add flags" do
-        RPXNow.popup_code('x', 'y', 'z', :unobtrusive => true, :flags => 'test').should include("flags=test")
+      describe 'flags' do
+        it "defaults to no language" do
+          should_not include('flags')
+        end
+        context "when specified" do
+          let(:options) { {:flags=>'test'} }
+          it { should include("flags=test") }
+        end
       end
 
-      it "can add default_provider" do
-        RPXNow.popup_code('x', 'y', 'z', :unobtrusive => true, :default_provider => 'test').should include("default_provider=test")
-      end
-    end
-
-    it "allows to specify the version of the widget" do
-      RPXNow.popup_code('x','y','z', :api_version => 300).should =~ %r(/openid/v300/signin)
-    end
-
-    it "defaults to widget version 2" do
-      RPXNow.popup_code('x','y','z').should =~ %r(/openid/v2/signin)
-    end
-
-    describe 'language' do
-      it "defaults to no language" do
-        RPXNow.popup_code('x','y','z').should_not =~ /RPXNOW.language_preference/
-      end
-
-      it "has a changeable language" do
-        RPXNow.popup_code('x','y','z', :language=>'de').should =~ /RPXNOW.language_preference = 'de'/
-      end
-    end
-
-    describe 'flags' do
-      it "defaults to no language" do
-        RPXNow.popup_code('x','y','z').should_not =~ /RPXNOW.flags/
-      end
-
-      it "can have flags" do
-        RPXNow.popup_code('x','y','z', :flags=>'test').should =~ /RPXNOW.flags = 'test'/
+      describe 'default_provider' do
+        it "defaults to no provider" do
+          should_not include('default_provider')
+        end
+        context "when specified" do
+          let(:options) { {:default_provider=>'test'} }
+          it { should include("default_provider=test") }
+        end
       end
     end
 
-    describe 'default_provider' do
-      it "defaults to no provider" do
-        RPXNow.popup_code('x','y','z').should_not =~ /RPXNOW.default_provider/
-      end
-
-      it "can have default_provider" do
-        RPXNow.popup_code('x','y','z', :default_provider=>'test').should =~ /RPXNOW.default_provider = 'test'/
-      end
-    end
   end
 
   describe :user_data do
