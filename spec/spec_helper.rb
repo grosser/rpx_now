@@ -1,7 +1,5 @@
-$LOAD_PATH << File.expand_path("../lib", File.dirname(__FILE__))
-
 # ---- setup environment/plugin
-require File.expand_path("../init", File.dirname(__FILE__))
+require 'rpx_now'
 API_KEY = '4b339169026742245b754fa338b9b0aebbd0a733'
 API_VERSION = RPXNow.api_version
 DOMAIN = RPXNow.domain

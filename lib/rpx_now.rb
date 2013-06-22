@@ -1,3 +1,4 @@
+require 'rpx_now/version'
 require 'rpx_now/api'
 require 'rpx_now/contacts_collection'
 require 'cgi'
@@ -11,8 +12,6 @@ module RPXNow
 
   self.api_version = 2
   self.domain = 'rpxnow.com'
-
-  VERSION = File.read( File.join(File.dirname(__FILE__),'..','VERSION') ).strip
 
   # retrieve the users data
   # - cleaned Hash

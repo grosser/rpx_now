@@ -1,6 +1,8 @@
+$LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
 name = "rpx_now"
+require "#{name}/version"
 
-Gem::Specification.new name, "0.6.24" do |s|
+Gem::Specification.new name, RPXNow::VERSION do |s|
   s.authors = ["Michael Grosser"]
   s.email = %q{grosser.michael@gmail.com}
   s.homepage = "https://github.com/grosser/#{name}"
