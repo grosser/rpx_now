@@ -1,3 +1,3 @@
 module RPXNow
-  VERSION = "0.6.24"
+  VERSION = "0.7.0"
 end
