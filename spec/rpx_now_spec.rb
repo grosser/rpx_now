@@ -152,18 +152,19 @@ describe RPXNow do
         should include(expected)
       end
 
-      it "encodes token_url for unobtrusive fallback link" do
-        expected = %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v2/signin?token_url=http%3A%2F%2Ffake.domain.com%2F">sign on</a>)
-        should include(expected)
+      describe 'fallback url' do
+        it "encodes token_url" do
+          should include(%Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/embed?token_url=http%3A%2F%2Ffake.domain.com%2F">sign on</a>))
+        end
+        context "when html href options provided" do
+          let(:options) { {:html => {:href => "http://go.here.instead"}} }
+          it { should include(%Q(<a class="rpxnow" href="http://go.here.instead">sign on</a>)) }
+        end
       end
 
       context "with api_version specified" do
         let(:options) { {:api_version => 300} }
-        it { should include("openid/v300/signin?") }
-      end
-
-      it "defaults to widget version 2" do
-        should =~ %r(/openid/v2/signin)
+        it { should_not include("openid/v300/signin") }
       end
 
       describe 'language' do
@@ -201,13 +202,19 @@ describe RPXNow do
     context 'when unobtrusive' do
       subject { RPXNow.popup_code(text, subdomain, url, {:unobtrusive => true}.merge(options) ) }
 
-      it "can build an unobtrusive widget with encoded token_url" do
-        should == %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v2/signin?token_url=http%3A%2F%2Ffake.domain.com%2F">sign on</a>)
+      describe 'fallback url' do
+        it "encodes token_url" do
+          should == %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/embed?token_url=http%3A%2F%2Ffake.domain.com%2F">sign on</a>)
+        end
+        context "when html href options provided" do
+          let(:options) { {:html => {:href => "http://go.here.instead"}} }
+          it { should include(%Q(<a class="rpxnow" href="http://go.here.instead">sign on</a>)) }
+        end
       end
 
       context "with api_version specified" do
         let(:options) { {:api_version => 'XX'} }
-        it { should include("openid/vXX/signin?") }
+        it { should_not include('XX') }
       end
 
       describe 'language' do
@@ -238,6 +245,94 @@ describe RPXNow do
           let(:options) { {:default_provider=>'test'} }
           it { should include("default_provider=test") }
         end
+      end
+    end
+
+    context "when fallback_url :legacy" do
+      context 'when obtrusive (default)' do
+        subject { RPXNow.popup_code(text, subdomain, url, {:fallback_url => :legacy}.merge(options) ) }
+
+        describe 'fallback url' do
+          it "encodes token_url" do
+            should include(%Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v2/signin?token_url=http%3A%2F%2Ffake.domain.com%2F">sign on</a>))
+          end
+          context "when html href options provided" do
+            let(:options) { {:html => {:href => "http://go.here.instead"}} }
+            it { should include(%Q(<a class="rpxnow" href="http://go.here.instead">sign on</a>)) }
+          end
+        end
+
+        it "defaults to widget version 2" do
+          should =~ %r(/openid/v2/signin)
+        end
+
+        context "with api_version specified" do
+          let(:options) { {:api_version => 300} }
+          it { should include("openid/v300/signin?") }
+        end
+
+      end
+
+      context 'and unobtrusive' do
+        subject { RPXNow.popup_code(text, subdomain, url, {:fallback_url => :legacy, :unobtrusive => true}.merge(options) ) }
+
+        describe 'fallback url' do
+          it "encodes token_url" do
+            should == %Q(<a class="rpxnow" href="https://subdomain.rpxnow.com/openid/v2/signin?token_url=http%3A%2F%2Ffake.domain.com%2F">sign on</a>)
+          end
+          context "when html href options provided" do
+            let(:options) { {:html => {:href => "http://go.here.instead"}} }
+            it { should include(%Q(<a class="rpxnow" href="http://go.here.instead">sign on</a>)) }
+          end
+        end
+
+        context "with api_version specified" do
+          let(:options) { {:api_version => 'XX'} }
+          it { should include("openid/vXX/signin?") }
+        end
+
+      end
+    end
+
+    context "when fallback_url :disable" do
+      context 'when obtrusive (default)' do
+        subject { RPXNow.popup_code(text, subdomain, url, {:fallback_url => :disable}.merge(options) ) }
+
+        describe 'fallback url' do
+          it "encodes token_url" do
+            should include(%Q(<a class="rpxnow" href="javacsript:void(0)">sign on</a>))
+          end
+          context "when html href options provided" do
+            let(:options) { {:html => {:href => "http://go.here.instead"}} }
+            it { should include(%Q(<a class="rpxnow" href="http://go.here.instead">sign on</a>)) }
+          end
+        end
+
+        context "with api_version specified" do
+          let(:options) { {:api_version => 300} }
+          it { should_not include("openid/v300/signin?") }
+        end
+
+      end
+
+      context 'and unobtrusive' do
+        subject { RPXNow.popup_code(text, subdomain, url, {:fallback_url => :disable, :unobtrusive => true}.merge(options) ) }
+
+        describe 'fallback url' do
+          it "encodes token_url" do
+            should == %Q(<a class="rpxnow" href="javacsript:void(0)">sign on</a>)
+          end
+          context "when html href options provided" do
+            let(:options) { {:html => {:href => "http://go.here.instead"}} }
+            it { should include(%Q(<a class="rpxnow" href="http://go.here.instead">sign on</a>)) }
+          end
+        end
+
+        context "with api_version specified" do
+          let(:options) { {:api_version => 300} }
+          it { should_not include("openid/v300/signin?") }
+        end
+
       end
     end
 
