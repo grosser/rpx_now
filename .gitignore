@@ -4,3 +4,4 @@ pkg
 .*.swo
 *.autotest
 .bundle
+.rvmrc
