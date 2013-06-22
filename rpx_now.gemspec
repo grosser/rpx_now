@@ -14,7 +14,6 @@ Gem::Specification.new do |s|
   s.files = [
     "CHANGELOG",
     "Gemfile",
-    "Gemfile.lock",
     "MIGRATION",
     "Rakefile",
     "Readme.md",

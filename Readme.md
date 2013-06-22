@@ -72,7 +72,12 @@ View
 `:language => 'en'` janrain tries to detect the users language, but you may overwrite it [possible languages](http://documentation.janrain.com/engage/widgets/localization)<br/>
 `:default_provider => 'google'` [possible default providers](http://documentation.janrain.com/engage/widgets/sign-in#TOC-Default-Provider)<br/>
 `:flags => 'show_provider_list'` [possible flags](http://documentation.janrain.com/engage/widgets/sign-in)<br/>
-`:html => {:id => 'xxx'}` is added to the popup link (popup_code only)
+`:html => {:id => 'xxx'}` is added to the popup link (popup_code only)<br/>
+`:fallback_url => :enable` forces fallback link to /openid/embed url (default)<br/>
+`:fallback_url => :disable` disables fallback url (will mean Javascript is required for users to sign in)<br/>
+`:fallback_url => :legacy` forces fallback to legacy widget url
+
+For more on the status of fallback URLs see [Janrain Support Forum discussion](https://support.janrain.com/entries/484814-The-token-URL-or-xdReceiver-has-not-been-whitelisted?page=1#post_23492268)
 
 ###Unobtrusive / JS-last
 `popup_code` can also be called with `:unobtrusive => true` ( --> just link without javascript include).

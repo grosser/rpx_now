@@ -8,10 +8,10 @@ module RPXNow
   attr_accessor :api_key
   attr_accessor :api_version
   attr_accessor :domain
-  
+
   self.api_version = 2
   self.domain = 'rpxnow.com'
-  
+
   VERSION = File.read( File.join(File.dirname(__FILE__),'..','VERSION') ).strip
 
   # retrieve the users data
@@ -101,7 +101,8 @@ module RPXNow
   # popup window for rpx login
   # options: :language, :flags, :unobtrusive, :api_version, :default_provider, :html
   def popup_code(text, subdomain, url, options = {})
-    if options[:unobtrusive]
+    options = options.dup
+    if options.delete(:unobtrusive)
       unobtrusive_popup_code(text, subdomain, url, options)
     else
       obtrusive_popup_code(text, subdomain, url, options)
@@ -129,7 +130,14 @@ module RPXNow
   # url for unobtrusive popup window
   # options: :language, :flags, :api_version, :default_provider
   def popup_url(subdomain, url, options={})
-    "#{Api.host(subdomain)}/openid/v#{extract_version(options)}/signin?#{embed_params(url, options)}"
+    case options.delete(:fallback_url)
+    when :legacy
+      "#{Api.host(subdomain)}/openid/v#{extract_version(options)}/signin?#{embed_params(url, options)}"
+    when :disable
+      "javacsript:void(0)"
+    else
+      "#{Api.host(subdomain)}/openid/embed?#{embed_params(url, options)}"
+    end
   end
 
   def extract_version(options)
@@ -175,7 +183,6 @@ module RPXNow
   end
 
   def unobtrusive_popup_code(text, subdomain, url, options={})
-    options = options.dup
     html_options = options.delete(:html) || {}
     html_options[:class] = "rpxnow #{html_options[:class]}".strip
     html_options[:href] ||= popup_url(subdomain, url, options)

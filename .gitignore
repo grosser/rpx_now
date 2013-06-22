@@ -4,3 +4,5 @@ pkg
 .*.swo
 *.autotest
 .bundle
+.rvmrc
+Gemfile.lock
