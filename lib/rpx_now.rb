@@ -133,7 +133,7 @@ module RPXNow
     when :legacy
       "#{Api.host(subdomain)}/openid/v#{extract_version(options)}/signin?#{embed_params(url, options)}"
     when :disable
-      "javacsript:void(0)"
+      "javascript:void(0)"
     else
       "#{Api.host(subdomain)}/openid/embed?#{embed_params(url, options)}"
     end
