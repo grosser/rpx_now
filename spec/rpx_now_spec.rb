@@ -300,7 +300,7 @@ describe RPXNow do
 
         describe 'fallback url' do
           it "encodes token_url" do
-            should include(%Q(<a class="rpxnow" href="javacsript:void(0)">sign on</a>))
+            should include(%Q(<a class="rpxnow" href="javascript:void(0)">sign on</a>))
           end
           context "when html href options provided" do
             let(:options) { {:html => {:href => "http://go.here.instead"}} }
@@ -320,7 +320,7 @@ describe RPXNow do
 
         describe 'fallback url' do
           it "encodes token_url" do
-            should == %Q(<a class="rpxnow" href="javacsript:void(0)">sign on</a>)
+            should == %Q(<a class="rpxnow" href="javascript:void(0)">sign on</a>)
           end
           context "when html href options provided" do
             let(:options) { {:html => {:href => "http://go.here.instead"}} }
