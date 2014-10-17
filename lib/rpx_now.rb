@@ -115,6 +115,9 @@ module RPXNow
       <script src="#{Api.host}/openid/v#{extract_version(options)}/widget" type="text/javascript"></script>
       <script type="text/javascript">
         //<![CDATA[
+        if( typeof(RPXNOW) == 'undefined' ){
+          RPXNOW = {};
+        }
         RPXNOW.token_url = '#{url}';
         RPXNOW.realm = '#{subdomain}';
         RPXNOW.overlay = true;
