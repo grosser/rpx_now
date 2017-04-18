@@ -67,7 +67,7 @@ View
     OR
     <%=RPXNow.popup_code('Login here...', 'My-Rpx-Domain', url_for(:controller => :session, :action => :rpx_token, :only_path => false), options)%>
 
-###Options
+### Options
 `:language => 'en'` janrain tries to detect the users language, but you may overwrite it [possible languages](http://documentation.janrain.com/engage/widgets/localization)<br/>
 `:default_provider => 'google'` [possible default providers](http://documentation.janrain.com/engage/widgets/sign-in#TOC-Default-Provider)<br/>
 `:flags => 'show_provider_list'` [possible flags](http://documentation.janrain.com/engage/widgets/sign-in)<br/>
@@ -78,7 +78,7 @@ View
 
 For more on the status of fallback URLs see [Janrain Support Forum discussion](https://support.janrain.com/entries/484814-The-token-URL-or-xdReceiver-has-not-been-whitelisted?page=1#post_23492268)
 
-###Unobtrusive / JS-last
+### Unobtrusive / JS-last
 `popup_code` can also be called with `:unobtrusive => true` ( --> just link without javascript include).
 To still get the normal popup add `RPXNow.popup_source('My-Rpx-Domain', url_for(:controller => :session, :action => :rpx_token, :only_path => false), [options])`<br/>
 Options like :language / :flags should be given for both.
