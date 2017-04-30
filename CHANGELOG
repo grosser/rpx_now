@@ -1,3 +1,9 @@
+0.7.2
+-----
+* stopped it breaking full integration tests in capybara with PhantomJS, by defaulting RPXNOW to {} before setting its attributes
+
+(...)
+
 0.6.13
 ------
  * return an indifferent hash from user_data when possible
